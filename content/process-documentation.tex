@@ -1,0 +1,124 @@
+\begin{landscape}
+\definecolor{color_30879}{rgb}{0,0.12549,0.376471}
+\pagenumbering{gobble} % Seitenzahlen entfernen
+    % top right corner
+    \thispagestyle{fancy}
+    \fancyhf{}
+    \rhead{\includegraphics[width=0.4\textwidth]{resources/Logo.png}}
+
+\section*{Prozessdokumentation}
+\textbf{Für die Nutzung von Künstlicher Intelligenz (KI) in wissenschafftlichen Arbeiten}
+\vspace{3mm}
+
+\noindent\textbf{\large Eziz Muhammedkulyyev}
+\vspace{3mm}
+
+\begin{longtable}{|p{6.5cm}|p{5cm}|p{8cm}|p{4cm}|}
+\hline
+\rowcolor{color_30879}
+\textbf{\textcolor{white}{Anfrage an folgende KI (inkl. Abrufdatum)}} &
+\textbf{\textcolor{white}{Grund für die Verwendung der KI}} &
+\textbf{\textcolor{white}{Bewertung der Qualität des KI-Outputs}} &
+\textbf{\textcolor{white}{Verwendete Software und Versionsnummer}} \\
+\hline
+\endhead
+\hline
+„Wir können die Rohdaten als CSV oder als Feather beziehen. Welches Format ist für die Weiterverarbeitung am schnellsten und effizientesten?“ (28.08.2026) &
+Festlegung des Datenformats zu Projektbeginn &
+Empfohlen wurde, die Feather-Dateien unverändert als Quelle zu behalten und alle abgeleiteten Tabellen als Parquet abzulegen; die Begründung (spaltenweise Speicherung, Kompression, erhaltene Datentypen) war nachvollziehbar und deckte sich mit der Dokumentation der Formate. Die Entscheidung haben wir anschließend im Team getroffen. &
+Claude (Anthropic), Opus 4.8 (Web) \\
+\hline
+„Erstelle ein Notebook \texttt{00\_data\_loading.ipynb}, das die Feather-Quelldateien einliest, die Typen vereinheitlicht und die Tabellen als Parquet nach \texttt{data/raw/} schreibt.“ (29.08.2026) &
+Umsetzung des Einlesens der Rohdaten &
+Das Notebook war als Gerüst brauchbar und lief nach Anpassungen durch. Ich habe es selbst ausgeführt und die Ergebnisse gegen die Quelldateien geprüft (Zeilen- und Spaltenzahl je Tabelle, Datentypen, Umwandlung der Datumsspalten). &
+Claude (Anthropic), Opus 4.8 (Web) \\
+\hline
+„Welche transformerbasierten Verfahren eignen sich für Themenmodellierung und Sentimentanalyse deutschsprachiger Parlamentsreden, und welche deutschen Modelle kommen dafür infrage?“ (03.09.2026) &
+Ideenfindung und Verfahrensauswahl für den Transformer-Strang (Kapitel 4.2 und 4.3) &
+Als Überblick brauchbar, in den Einzelheiten unspezifisch. Die Entscheidung für BERTopic mit \texttt{jina-embeddings-v2-base-de} und für \texttt{german-sentiment-bert} habe ich selbst getroffen und anhand der jeweiligen Originalarbeiten geprüft. Angaben zu Modelleigenschaften wurden nicht ungeprüft übernommen. &
+Claude (Anthropic), Opus 4.8 (Web) \\
+\hline
+„Wie berechne ich Embeddings für rund 300.000 Reden in Google Colab, ohne an Arbeits- und GPU-Speicher zu scheitern?“ (10.09.2026) &
+Anpassung des Rechenwegs an die begrenzten Ressourcen in Colab &
+Der Hinweis, die Berechnung in Blöcke zu zerlegen und Zwischenstände zu speichern, war der entscheidende Anstoß und wurde übernommen. Block- und Batchgröße habe ich selbst festgelegt. &
+Claude (Anthropic), Opus 4.8 (Web) \\
+\hline
+„Wie senke ich den Bedarf an GPU-Speicher bei der Satzklassifikation und beschleunige den Durchlauf?“ (13.09.2026) &
+Umsetzung des Sentiment-Laufs über 8,8 Mio. Sätze &
+Die Vorschläge (halbe Rechengenauigkeit, größere Batches, Verarbeitung in Abschnitten zu 200.000 Sätzen mit Zwischenspeicherung) waren umsetzbar. &
+Claude (Anthropic), Opus 4.8 (Web) \\
+\hline
+„Überarbeite diesen Notebook-Code und schlage Verbesserungen vor.“ (mehrfach, 10.--16.09.2026) &
+Refaktorierung und Fehlersuche im eigenen Code &
+Hilfreich bei Struktur und Wiederholungen im Code. Mehrere Vorschläge liefen nicht auf Anhieb und mussten korrigiert werden, insbesondere beim Zusammenführen von Embeddings und Reden über die \texttt{speech\_id}. Jede Änderung habe ich selbst ausgeführt und am Ergebnis geprüft. &
+Claude (Anthropic), Opus 4.8 (Web) \\
+\hline
+„Warum bricht \texttt{biber} ohne Fehlermeldung ab, und wie richte ich Unterschriften und Absatzabstände im Dokument aus?“ (17.09.2026) &
+Technische Fehlersuche und Formatierung in LaTeX &
+Die Ursachen wurden zutreffend benannt und behoben (beschädigter \texttt{biber}-Zwischenspeicher, Ausrichtung der Bilder auf der Grundlinie, Abstand der \texttt{\textbackslash paragraph}-Überschriften). Rein technisch, ohne Einfluss auf den Inhalt der Arbeit. &
+Claude Code (Anthropic), Opus 5 \\
+\hline
+„Schneide meine Quellen-PDFs auf die zitierten und markierten Seiten zu und prüfe, ob alle von mir zitierten Seiten enthalten sind.“ (17.09.2026) &
+Erstellung der geforderten Quellennachweise &
+Zuschnitt und Abgleich mit meinen Zitatstellen waren korrekt; dabei fiel eine falsche Seitenangabe zu Dieng et al. (2020) auf, die ich in der Quelle nachgeprüft und korrigiert habe. Die Markierungen in den PDFs stammen von mir. &
+Claude Code (Anthropic), Opus 5 \\
+\hline
+\end{longtable}
+
+\newpage
+
+\noindent\textbf{\large Jesco Cedric Homberg}
+\vspace{3mm}
+
+\begin{longtable}{|p{6.5cm}|p{5cm}|p{8cm}|p{4cm}|}
+\hline
+\rowcolor{color_30879}
+\textbf{\textcolor{white}{Anfrage an folgende KI}} &
+\textbf{\textcolor{white}{Grund für die Verwendung der KI}} &
+\textbf{\textcolor{white}{Bewertung der Qualität des KI-Outputs}} &
+\textbf{\textcolor{white}{Verwendete Software und Versionsnummer}} \\
+\hline
+\endhead
+\hline
+Zeilenweise Code-Vervollständigung während des Schreibens in der IDE (laufend) &
+Beschleunigung wiederkehrender Schreibarbeit im Code &
+Vorschläge ohne inhaltliche Tragweite. Jede Übernahme erfolgte bewusst und wurde beim Ausführen der Notebooks mitgeprüft. &
+GitHub Copilot (Code-Completion) in PyCharm \\
+\hline
+Umsetzung eigener Entwürfe und Ablaufskizzen in ausführbaren Python-Code (laufend) &
+Werkzeug zur Code-Generierung anhand des eigenen Entwurfs, da das eigene Python-Wissen breit, aber nicht in der nötigen Tiefe vorhanden ist &
+Aufbau, Reihenfolge und inhaltliche Festlegungen stammen von mir, die KI hat sie in Code übersetzt. Vorschläge wurden ausnahmslos als lokaler Git-Diff gesichtet und erst nach eigener Prüfung übernommen. &
+Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
+\hline
+Erzeugung von Skripten zur Prozess- und Rechenüberwachung &
+Rechenintensive Läufe sollten über Nacht unbeaufsichtigt laufen und nach Abbrüchen selbständig neu starten &
+Die Skripte erfüllten ihren Zweck; die Läufe wurden überwacht und wieder angestartet. Rein technisch, ohne Einfluss auf den Inhalt der Arbeit. &
+Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
+\hline
+Umbenennung der Jupyter-Notebooks nach einem einheitlichen Schema &
+Erhöhte Übersicht und Vereinheitlichung der Projektstruktur &
+Rein organisatorische Änderung, das Ergebnis habe ich gegen die Notebook-Reihenfolge geprüft. Ohne Einfluss auf den Inhalt der Arbeit. &
+Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
+\hline
+Durchführung von Git-Merges zwischen den parallel bearbeiteten Ständen &
+Zusammenführung der im Team parallel entstandenen Arbeitsstände &
+Als Werkzeug eingesetzt, die zusammengeführten Stände wurden vor der Übernahme als Diff geprüft. Rein technisch, ohne Einfluss auf den Inhalt. &
+Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
+\hline
+„Bitte mache eine Wahrheitsanalyse zu den Tex-Dokumenten in Verbindung mit den Notebook-Outputs und mache einen Entwurf darüber, wo Zahlen und Aussagen getätigt wurden, die sich auf kein Notebook zurückführen lassen.“ sowie „Bitte finde heraus, wo die Zahl \texttt{<x>} in dieser Aussage ihren Ursprung hat, und durchsuche unter anderem auch die Git-Historie und die Jupyter-Notebook-Outputs.“ (mehrfach) &
+Konsistenzprüfung zwischen Notebooks und LaTeX-Dokumentation. Die Gruppenzusammenarbeit geschah parallel und die gewählten Datenbasen wichen voneinander ab, wodurch Outputs und Textaussagen erneut betrachtet werden mussten. &
+Die Ausgaben dienten als Grundlage für Übersicht und Korrektur-ToDo-Liste. Es wurden keine inhaltlichen Outputs vollständig übernommen; inhaltliche Vorschläge wurden als lokaler Git-Diff immer menschlich geprüft und mit den vorliegenden Notebook-Outputs und Notebook-Reihenfolgen abgeglichen. &
+Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
+\hline
+„Super, dann haben wir die Zahlen ja geklärt. Kannst du nochmal auf Kap 4 und 5 schauen, was da in den Aussagen nun fehlerhaft oder redundant ist?“ (18.09.2026) &
+Abschließende Konsistenzanalyse der Kapitel 4 und 5, zeitlich im Anschluss an umfangreiche Überarbeitungen in Kapitel 3 &
+Der Output nannte 15 Befunde in sechs Gruppen: falsche oder widersprüchliche Zahlen, im Methodenteil angekündigte, aber nicht eingelöste Auswertungsschritte, ein fehlerhafter Querverweis, mehrfach wiederholte Kennzahlen und Erklärungen, sprachliche Fehler sowie ein reiner Prüfhinweis. Der Output wurde nicht direkt übernommen, sondern als Prüfliste verwendet und Punkt für Punkt durch händische, menschliche Prüfung mit der Ist-Situation in Text und Notebook-Outputs abgeglichen. &
+Claude (Anthropic), Opus 5 (GitHub Copilot, Medium/264K) \\
+\hline
+Überführung dieser Prozessdokumentation von einer geordneten Kommentarstruktur in die Tabellenstruktur (18.09.2026) &
+Vereinheitlichung mit den übrigen Abschnitten, da die eigene Grundlage als semistrukturierter Fließtext vorlag &
+Gliederung und sprachliche Verfeinerung stammen aus dem Modell, die dokumentierten Vorgänge und Bewertungen von mir. Der Entwurf wurde vor der Übernahme gegengelesen. &
+Claude (Anthropic), Opus 5 (GitHub Copilot, Max/1M) \\
+\hline
+\end{longtable}
+\end{landscape}

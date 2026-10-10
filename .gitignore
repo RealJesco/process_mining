@@ -1,0 +1,100 @@
+# ------------------------------
+# Python
+# ------------------------------
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.egg
+*.egg-info/
+.eggs/
+
+# Build-Artefakte
+build/
+dist/
+wheels/
+pip-wheel-metadata/
+
+# ------------------------------
+# Virtuelle Umgebungen
+# ------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# ------------------------------
+# Jupyter
+# ------------------------------
+.ipynb_checkpoints/
+
+# ------------------------------
+# Test & Tool Caches
+# ------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ------------------------------
+# IDEs / Editor
+# ------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ------------------------------
+# Projektdaten (nicht versionieren)
+# ------------------------------
+data/
+cache/
+output/
+logs/
+
+# Große externe Daten- und Kursordner (via Drive/extern teilen, nicht in Git)
+Collections/
+Vorlesungscode/
+
+# Notebook-/Datei-Backups
+*.bak
+
+# Modelle oder große Dateien (optional)
+models/
+
+# ------------------------------
+# PyTorch / Hugging Face (optional)
+# ------------------------------
+*.pt
+*.pth
+
+# all auxilary latex files
+*.aux
+*.bbl*
+*.blg
+*.brf
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.fls
+*.bcf*
+*.synctex*
+*.fdb_latexmk
+# all intermediate latex files
+*.dvi
+*.ps
+main.pdf
+*.run.xml
+raw/
+meta/
+# Isolierte jina-Umgebung (transformers 4.x, Python 3.12)
+.venv_jina/
+
+claude.md

@@ -1,0 +1,185 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{silence} % Filtert die harmlosen Font-Shape-Warnungen der hyphenat[htt]-Option
+\WarningFilter{latexfont}{Font shape}
+\WarningFilter{latexfont}{Some font shapes were not available}
+\WarningsOff[hyphenat]
+\usepackage[table]{xcolor} % Für farbige Tabellen
+\usepackage[ngerman]{babel} % Für Silbentrennung und deutsche Spracheinstellungen
+\usepackage[utf8]{inputenc} % Um Umlaute und Sonderzeichen nutzen zu können
+\usepackage[T1]{fontenc} % Um Umlaute und Sonderzeichen nutzen zu können
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[a4paper,
+	lmargin={2cm},
+	rmargin={2cm},
+	tmargin={2cm},
+	bmargin={3cm}]{geometry} % Für das Layout und die Seitenränder
+\usepackage{setspace} % Für den Zeilenabstand
+\setstretch{1.5} % Zeilenabstand auf 1.5 setzen
+\usepackage[skip=1pt plus 1pt minus 1pt]{parskip}
+\raggedbottom
+\usepackage{graphicx} % Um Bilder einzufügen
+\usepackage{wrapfig} % Um Bilder im Fließtext einzubinden
+\usepackage{csquotes} % Um Text in Anführungsstriche zu setzen
+\usepackage{pdfpages} % Um die Titelseite und andere PDF-Seiten einzubinden
+\usepackage{hyperref} % Um Verlinkungen und Hyperlinks einzufügen
+\usepackage{acronym} % Um Akronyme zu definieren und zu verwalten
+\usepackage{subcaption} % Um mehrere Bilder zusammen einzustellen und Links zu Abbildungen zu korrigieren
+% Bildunterschriften einheitlich: 11pt, Label aufrecht, Text kursiv, Doppelpunkt.
+% caption 3.6 kennt den Schluessel fontsize noch nicht -> eigene Schriftgroesse deklarieren.
+\DeclareCaptionFont{beschriftung}{\fontsize{11pt}{13.2pt}\selectfont}
+\captionsetup{font=beschriftung, labelfont=up, textfont=it, labelsep=colon}
+\usepackage{dirtytalk} % Für Zitate: \say{...} zur einfachen Handhabung von Zitaten
+\usepackage{textcomp} % Für Copyright, Trademark etc
+\newcommand{\todo}[1]{ % TODO-Notizen erstellen
+	\textcolor{red}{TODO: #1}
+}
+\newcommand{\note}[1]{\textcolor{blue}{NOTE: #1}
+}
+\usepackage{amsmath} % Für \text, Matheumgebungen
+\usepackage{booktabs} % Für schönere Tabellen
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{enumitem}
+\newcommand{\needCite}[1][]{
+	\colorbox{yellow}{\textcolor{red}{Zitation Notwendig #1}}%
+}
+
+\newcommand{\anf}[1]{\glqq #1\grqq{}} % Anführungszeichen für Zitate
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{placeins}
+\usepackage[htt]{hyphenat}   % erlaubt Umbrüche in \texttt
+
+\usepackage[export]{adjustbox}
+\usepackage{caption}
+% Auskommentieren für APA
+% (Zeile 125 auch auskommentieren)
+%\usepackage{apacite}
+%\bibliographystyle{apacite} % Zitierstil in APA
+
+% Auskommentieren für IEEE
+% (Zeile 128 auch auskommentieren)
+\usepackage[style=apa, backend=biber]{biblatex} % Verwende biblatex für Zitationen im IEEE-Stil
+\addbibresource{literature.bib} % Quellenverzeichnis einfügen
+\DefineBibliographyStrings{ngerman}{%
+  andothers = {et\addabbrvspace al\adddot}, % Anpassung für "et al." in der Literatur
+}
+% Umbruch für URLs in der Literatur
+\usepackage{url} % Für die korrekte Darstellung von URLs
+\setcounter{biburllcpenalty}{7000} % Strenge Umbruchregeln für URLs
+\setcounter{biburlucpenalty}{8000} % Strenge Umbruchregeln für URLs
+
+\setlength{\parindent}{0pt} % Einrücken bei Absatz verhindern
+
+% \paragraph-Überschriften: Abstand davor wie bei einem normalen Absatz.
+% Die Artikel-Klasse setzt hier standardmäßig 3.25ex, was neben dem
+% parskip-Abstand von 1pt als Lücke auffällt.
+% Mehr Luft gewünscht? Den ersten Wert unten auf z.B. 1ex erhöhen.
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+	{1pt \@plus 1pt \@minus 1pt}% Abstand davor
+	{-1em}% Überschrift läuft in den Text (wie bisher)
+	{\normalfont\normalsize\bfseries}}
+\makeatother
+
+\RequirePackage{fancyhdr} % Für benutzerdefinierte Kopf- und Fußzeilen
+
+\cfoot{\thepage} % Seitenzahl in der Mitte des Fußbereichs
+
+\newcounter{romanBeginningEnd} % Um Römische Seitenzahl zu speichern
+
+% Sektionen Referenzen anpassen
+\addto\extrasngerman{%
+	\renewcommand{\sectionautorefname}{Kapitel}
+	\renewcommand{\subsectionautorefname}{Abschnitt}
+	\renewcommand{\subsubsectionautorefname}{Abschnitt}
+}
+
+
+\begin{document}
+
+
+	\pagenumbering{gobble} % Seitenzahlen unterdrücken
+	\include{cover} % Titelseite einfügen
+	% \input{content/aufteilung_tabellen.tex}
+	\clearpage % erst die Tabellen ausgeben, dann das Inhaltsverzeichnis
+
+
+	\setcounter{page}{1} % Römische Seitenzahlen zurücksetzen
+	\pagenumbering{Roman} % Römische Seitenzahlen aktivieren
+
+% Inhaltsverzeichnis
+	\setcounter{tocdepth}{3} % Bis Ebene 4.2.1; \paragraph-Zwischentitel bleiben draussen
+	\tableofcontents % Inhaltsverzeichnis erstellen
+	\newpage
+
+	\setcounter{secnumdepth}{0} % Keine Numerierung von Überschriften
+	\clearpage
+
+% ABBILDUNGSVERZEICHNIS
+	% \phantomsection % Für korrekte Verlinkung im Inhaltsverzeichnis
+	% \addcontentsline{toc}{section}{\listfigurename} % Abbildungsverzeichnis im Inhaltsverzeichnis anzeigen
+	% \listoffigures % Abbildungsverzeichnis erstellen
+	% \clearpage
+
+% TABELLENVERZEICHNIS
+	% \phantomsection % Für korrekte Verlinkung im Inhaltsverzeichnis
+	% \addcontentsline{toc}{section}{\listtablename} % Tabellenverzeichnis im Inhaltsverzeichnis anzeigen
+	% \listoftables % Tabellenverzeichnis erstellen
+	% \newpage
+
+% ABKÜRZUNGSVERZEICHNIS
+	% \phantomsection % For correct linking in the table of contents
+	% \addcontentsline{toc}{section}{Abkürzungsverzeichnis} % Add to table of contents
+	% \section*{Abkürzungsverzeichnis} % Create a non-numbered section for the title
+	% \input{abbreviations}
+	% \newpage
+
+	\setcounter{secnumdepth}{3} % Überschriften wieder numerieren
+	\setcounter{romanBeginningEnd}{\the\value{page}} % Speichern der römischen Seitenzahl
+	\setcounter{page}{1} % Mit arabischen Seitenzahlen wieder bei 1 anfangen
+	\pagenumbering{arabic} % Arabische Seitenzahlen aktivieren
+
+% ###############################################################
+	% Hier Inhalt einfügen
+	% \pagestyle{fancy} % Setze den Seitenstil auf fancy
+
+	\addtolength{\headheight}{0.9cm} % Höhe des Kopfbereichs anpassen
+	\pagestyle{fancyplain} % Setze den Seitenstil auf fancyplain
+	\fancyhead{} % Kopfbereich leeren
+	% \fancyhead[LE,RO]{\thepage} % Seitenzahl links auf geraden Seiten, rechts auf ungeraden Seiten
+	\fancyhead[RE]{\leftmark} % Kapitelüberschrift links auf geraden Seiten
+	\fancyhead[LO]{\nouppercase{\rightmark}} % Abschnittsüberschrift rechts auf ungeraden
+
+	\input{content/01_Einleitung}
+
+
+% ###############################################################
+
+	\newpage
+	\pagenumbering{Roman} % Römische Seitenzahlen aktivieren
+	\setcounter{page}{\theromanBeginningEnd} % Römische Seitenzahlen fortsetzen
+	\setcounter{secnumdepth}{0} % Nummerierung der Überschriften entfernt
+
+% Quellenverzeichnis
+	\setcounter{secnumdepth}{3} % Überschriften wieder numerieren (Für den Anhang)
+
+	% Uncomment to use APA
+	%\bibliography{Quellenverzeichnis}
+
+	% Uncomment to use IEEE
+	\printbibliography % Quellenverzeichnis drucken
+
+	\newpage
+
+% ANHANG
+	\input{content/anhang} % Anhang einfügen
+	\clearpage % Floats des Anhangs abschließen, sonst rutschen sie in die Erklärung
+
+	\input{content/eidesstattliche} % Eigenständigkeitserklärung einfügen
+	\newpage
+	\input{content/process-documentation} % KI-Erklärung einfü
+
+\end{document}
