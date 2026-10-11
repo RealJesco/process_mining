@@ -1,3 +1,131 @@
 \section{Einleitung}
 \label{sec:einleitung}
 
+
+1 Einleitung (1 Seite)
+\begin{itemize}
+    \item Vorstellung des Ziels der Arbeit: Anwendung von Process-Mining Techniken auf reale Log-Daten zur Prozessverbesserung.
+    \item Kurze Beschreibung des Datensatzes: "Domestic" und "International" xes.
+    \item Kontext: Daten stammen von Reise Deklarationen einer niederländischen Universität.
+    \item Methodik: Kurze Erläuterung, dass Celonis und Python für die Analyse verwendet und verglichen werden. (1-2 Literaturquellen zur Relevanz von Process Mining)
+\end{itemize}
+
+2 Prozess Discovery und allgemeiner Ablauf (2-3 Seiten)
+\begin{itemize}
+    \item Visualisierung und Beschreibung des grundlegenden Prozessflusses. (zb BPMN oder Petri-nets). Process Explorer aus Celonis oder PM4Py verwenden.
+    \item Sicherstellung einer angemessenen Abstraktionsniveaus, um den Prozess verständlich zu halten.
+    \item Vergleich generellen Abläufe: Gibt es große Unterschiede im Standardprozess zwischen Domestic und International? (1-2 quellen zur prozess discovery und zb BPMN)
+\end{itemize}
+
+3 Performance- und Konformitätsanalyse (ca. 5 Seiten)
+\begin{itemize}
+    \item Durchlaufzeiten: Wie lange dauern die verschiedenen Prozessinstanzen? Auffällige Muster. Entweder Celonis oder Python visualisierungen.
+    \item Engpässe (Bottlenecks): Identifikation von Bottlenecks und Diskussion möglicher Ursachen.
+    \item Ablehnungen (Rejections): Wie viele Anträge werden abgelehnt und aus welchen Gründen?
+    \item Regelverstöße (Conformance Violations) und Ausnahmen: Unerwartetes Verhalten, zb fehlende Permits.
+    \item Diskussion von Mustern, die auf mangelnde Prozesskonformität hindeuten. (quelle zur Conformance-Checking)
+\end{itemize}
+
+4 Erweiterte Analysen und KPIs (ca. 3 Seiten)
+\begin{itemize}
+    \item Fehlende Daten: Eine kritische Reflexion darüber, welche Daten oder Attribute in den Logs fehlen, um noch detailliertere Einblicke in die Prozesse zu gewinnen.
+    \item Maschinelles Lernen: Überlegungen, an welchen Stellen unüberwachte oder überwachte Machine-Learning-Verfahren helfen könnten, tiefere Erkenntnisse zu generieren (z. B. zur Vorhersage von Ablehnungen oder zur Anomalieerkennung). Dies ist ein idealer Abschnitt für die Python-Perspektive deines Partners.
+    \item KPIs: Definition und Berechnung sinnvoller Key Performance Indicators (KPIs) für diese Prozesse. Hier kannst du deine Erfahrung mit PQL einfließen lassen, um spezifische Prozesskennzahlen direkt in Celonis zu formulieren. (Quellen: 1-2 Quellen zu Machine Learning im Process Mining oder KPI-Definition).
+\end{itemize}
+
+5 Tool-Vergleich: Celonis vs. Python (1-2 Seiten)
+\begin{itemize}
+    \item Gegenüberstellung der beiden gewählten Werkzeuge.
+    \item Wo lagen die Stärken von Celonis (z. B. schnelle visuelle Exploration, Dashboarding) und wo die von Python (z. B. Flexibilität, Einsatz spezifischer Algorithmen)?.
+\end{itemize}
+
+6 Handlungsempfehlungen und Fazit (1-2 Seiten)
+\begin{itemize}
+    \item Ableitung spezifischer Empfehlungen zur Verbesserung des zugrundeliegenden Abrechnungsprozesses der Universität.
+    \item Kurze Zusammenfassung der wichtigsten Erkenntnisse.
+\end{itemize}
+
+
+Celonis:
+Domestic:
+Cases: 4618 happy path, 10500 total
+happy path tpt: 9d
+Algorithmic happy path: Declaration Submitted by EMPLOYEE - Declaration Approved by ADMINISTRATION - Declaration Final Approved by SUPERVISOR - Request Payment - Payment Handled
+Events:
+Aktivitäten:
+Variants: 100
+
+Internationals:
+Cases: 1369 happy path, 6449 total
+happy path tpt:
+Algorithmic happy path: permit submitted by EMPLOYEE - permit approved by ADMINISTRATION - permit final approved by SUPERVISOR - start trip - end trip -
+declaration submitted by EMPLOYEE - declaration approved by ADMINISTRATION - declaration final approved by SUPERVISOR - request payment - payment handled
+Events:
+Aktivitäten:
+Variants: 756
+avg tpt: 66d (happy path)
+
+\begin{table}[htbp]
+\centering
+\caption{KPIs Domestic vs International}
+\label{tab:kpi_comparison}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l c c @{}}
+\hline
+\textbf{KPI} & \textbf{Domestic} & \textbf{International} \\ \hline
+Cases & 10.500 & 6.449 \\
+Happy-Path-Anteil & 43,98 \% (4.618) & 21,23 \% (1.369) \\
+Ø Durchlaufzeit Happy Path & 9 d & 66 d (Ø aller Cases: 75 d ohne Extreme) \\
+Konforme Cases & 81 \% (8,47k) & 38 \% (2,47k) \\
+Verletzungstypen & 19 & 56 \\
+Ø TPT konform vs. verletzend & 10,4 vs. 16,3 d (+5,9 d) & 69,3 vs. 97,1 d (+27,8 d) \\
+Schritte pro Case konform vs. verletzend & 5,1 vs. 6,4 & 10,2 vs. 11,8 \\
+Rejected by EMPLOYEE & 1.212 Cases (12 \%), +9 d & 1.483 (23 \%), +18 d \\
+Rejected by ADMINISTRATION & 846 (8 \%), +11 d & 1.287 (20 \%), +15 d \\
+Declaration zweimal hintereinander eingereicht & 776 (7 \%), +12 d & 1.225 (19 \%), +20 d \\ \hline
+\end{tabular*}
+\end{table}
+
+
+\subsection{Bottlenecks}
+
+\textbf{Domestic:} Die Wartezeiten sind kurz. Auffällig ist die Zahlungsphase:
+\texttt{FINAL\_APPROVED \textrightarrow\ Request Payment} (3 Arbeitstage) und
+\texttt{Request Payment \textrightarrow\ Payment Handled} (4 Arbeitstage), beide bei ca. 95\,\%
+der Cases. Das ist ein großer Teil der ca. 9 Tage Happy-Path-Dauer.
+
+\textbf{International:} \texttt{Permit FINAL\_APPROVED \textrightarrow\ Start trip}
+dauert 39 Arbeitstage (65\,\% der Cases). Das ist vermutlich kein echter
+Engpass, sondern die Vorlaufzeit bis zur geplanten Reise. Der echte Hebel
+ist \texttt{End trip \textrightarrow\ Declaration SUBMITTED} mit 13 Arbeitstagen bei
+71\,\% der Cases, also die späte Einreichung durch den Mitarbeiter.
+
+\texttt{Permit FINAL\_APPROVED \textrightarrow\ Declaration SUBMITTED}
+(17 Arbeitstage, 12\,\% der Cases) betrifft Fälle ohne Reise-Events.
+Das sollte kurz erklärt oder nachgeprüft werden.
+
+\subsection{Non-Conformance}
+
+748 International-Cases (12\,\%) starten mit \texttt{Start trip}, haben
+also keinen vorherigen Permit-Antrag, und dauern 29 Tage länger. Das ist
+die quantifizierte Antwort auf die Frage nach fehlenden Permits.
+
+637 Cases (10\,\%) haben \texttt{Permit FINAL\_APPROVED by DIRECTOR}
+bzw. \texttt{Permit APPROVED by SUPERVISOR}, mit +52 Tagen. Vermutlich
+handelt es sich um eine Eskalation bei teuren Reisen; das ist allerdings
+eine Hypothese.
+
+Doppelte Einreichungen (19\,\% bzw. 7\,\%) sind eine Rework-Schleife,
+wahrscheinlich nach einer Ablehnung.
+
+Das Referenzmodell ist nicht normativ. Celonis leitet den Happy Path algorithmisch ab.
+“Undesired activity” heißt nur, dass die Aktivität nicht im Happy Path liegt.
+BUDGET OWNER (27-28\,\%) oder PRE\_APPROVER (6\,\%) sind deshalb vermutlich legitime Schritte.
+Die 38\,\% bzw. 81\,\% konformer Cases solltet ihr als “Abweichung vom häufigsten Pfad” formulieren, nicht als Regelverstoß.
+
+“Rejected by EMPLOYEE” ist plausibel eine Folgeaktivität. In 20\,\% der International-Cases folgt es innerhalb von 3
+Arbeitstagen direkt auf “Rejected by ADMINISTRATION”. Das stützt die Annahme, dass der Mitarbeiter die Rückgabe bestätigt, aber es bleibt eine Hypothese.
+
+Sprung Anfang 2018. In beiden Conformance-Verläufen steigt die Konformität ab 2018-01
+deutlich (Domestic ca. 60\,\% → 85\,\%, International ca. 30\,\% → 45\,\%). Das deutet auf eine Prozess- oder Systemänderung hin, die ihr als Vermutung kennzeichnen könnt.
+
+Durchlaufzeit-Verteilung. International liegt der Durchschnitt bei 86 Tagen, mit langem Tail bis 743 Tage (ca. 360 Cases im letzten Bin). Celonis nennt zusätzlich 75 Tage “ohne Extreme”. Nennt beide Werte und erklärt den Unterschied. Die Cases nach 2019 sind sehr wenige und wahrscheinlich Ausreißer.
