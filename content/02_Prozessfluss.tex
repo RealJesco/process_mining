@@ -1,0 +1,71 @@
+\section{Prozessfluss und allgemeiner Ablauf}
+\label{sec:prozessfluss}
+
+% Umfang: 2-3 Seiten
+% Assignment-Frage 1: Describe and visualize the general underlying process flow.
+%   Reasonable level of abstraction. BPMN / Petri Nets.
+% Assignment-Frage 7 (teilweise): Unterschiede International vs. Domestic.
+% Quellen: Process Discovery \parencite{leemans_discovering_2013,augusto_automated_2019},
+%          BPMN \parencite{dumas_fundamentals_2018}
+
+\todo{Kapitel schreiben}
+
+% ------------------------------------------------------------------
+% Basisstatistik (direkt aus den XES-Dateien ausgelesen, 14.10.2026)
+% ------------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{Basisstatistik der Event-Logs}
+\label{tab:basisstatistik}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l c c @{}}
+\hline
+\textbf{Kennzahl} & \textbf{Domestic} & \textbf{International} \\ \hline
+Cases & 10.500 & 6.449 \\
+Events & 56.437 & 72.151 \\
+Aktivitäten & 17 & 34 \\
+Varianten (Celonis) & 100 & 756 \\
+Case-Start 2016 / 2017 / 2018 & -- / 2.240 / 8.260 & 3 / 1.494 / 4.952 \\
+Ressourcen (\texttt{org:resource}) & STAFF MEMBER, SYSTEM & STAFF MEMBER, SYSTEM \\ \hline
+\end{tabular*}
+\end{table}
+
+\subsection{Domestic Declarations}
+\label{sec:prozessfluss_domestic}
+
+% Celonis-Notizen:
+%   Cases: 4618 happy path, 10500 total (43,98 %)
+%   Happy-Path-TPT: 9 d
+%   Algorithmischer Happy Path:
+%     Declaration SUBMITTED by EMPLOYEE -> Declaration APPROVED by ADMINISTRATION
+%     -> Declaration FINAL_APPROVED by SUPERVISOR -> Request Payment -> Payment Handled
+%   Varianten: 100
+% Abbildung: BPMN-Export aus Celonis (resources/CelonisDomesticDeclarations.bpmn
+%            -> als PDF/PNG nach figures/celonis/ exportieren)
+
+\todo{Abbildung BPMN Domestic (figures/celonis/) und Beschreibung}
+
+\subsection{International Declarations}
+\label{sec:prozessfluss_international}
+
+% Celonis-Notizen:
+%   Cases: 1369 happy path, 6449 total (21,23 %)
+%   Happy-Path-TPT: 66 d
+%   Algorithmischer Happy Path:
+%     Permit SUBMITTED by EMPLOYEE -> Permit APPROVED by ADMINISTRATION
+%     -> Permit FINAL_APPROVED by SUPERVISOR -> Start trip -> End trip
+%     -> Declaration SUBMITTED by EMPLOYEE -> Declaration APPROVED by ADMINISTRATION
+%     -> Declaration FINAL_APPROVED by SUPERVISOR -> Request Payment -> Payment Handled
+%   Varianten: 756
+% Abbildung: BPMN-Export aus Celonis (resources/CelonisInternationalDeclarations.bpmn)
+
+\todo{Abbildung BPMN International (figures/celonis/) und Beschreibung}
+
+\subsection{Abstraktionsniveau und Vergleich}
+\label{sec:prozessfluss_vergleich}
+
+% - Abstraktion begründen: Varianten-Abdeckung (Top-n-Varianten = x % der Cases),
+%   Frequenzfilter im Process Explorer.
+% - International = Domestic-Kern + vorgelagerte Permit-Phase + Trip-Events.
+% - Optional: Inductive-Miner-Modell aus PM4Py (Jesco, figures/python/) gegenüberstellen.
+
+\todo{Vergleich Domestic vs. International; ggf. PM4Py-Modell von Jesco}

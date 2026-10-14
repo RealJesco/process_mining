@@ -98,3 +98,9 @@ meta/
 .venv_jina/
 
 claude.md
+
+# ------------------------------
+# Event-Logs (zu gross fuer das Schreib-Repo)
+# ------------------------------
+*.xes
+*.xes.gz
