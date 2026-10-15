@@ -10,25 +10,45 @@
 %   6 Are there any patterns that would suggest non-conformance?
 % Quellen: Conformance Checking \parencite{carmona_conformance_2018}
 
-\todo{Kapitel schreiben}
+Aufbauend auf dem in \autoref{sec:prozessfluss} beschriebenen Prozessfluss
+untersucht dieses Kapitel, wie lange die Prozessinstanzen dauern, wo Wartezeiten
+entstehen, wie häufig Deklarationen abgelehnt werden und an welchen Stellen das
+beobachtete Verhalten vom erwarteten Ablauf abweicht. Grundlage sind die
+Standard-Analysen der Celonis-Process-Analytics-Umgebung (\textit{Process
+Overview}, \textit{Throughput Times}, \textit{Conformance} und \textit{Process
+AI}), deren Kennzahlen intern über die Process Query Language (PQL) berechnet
+werden \parencite{vogelgesang_celonis_2022}. Wo es für die Einordnung nötig ist,
+werden die Ergebnisse den Python-Analysen mit PM4Py gegenübergestellt
+\parencite{berti_process_2019}. \autoref{tab:kpi_comparison} fasst die zentralen
+Kennzahlen beider Logs zusammen.
+
+Bei allen Zeitangaben ist zu beachten, dass Celonis die Wartezeiten zwischen zwei
+Aktivitäten in der Bottleneck-Analyse in \emph{Arbeitstagen} (AT), die
+Durchlaufzeiten ganzer Cases dagegen in \emph{Kalendertagen} (d) ausweist. Da
+der Log ausschließlich Abschluss-Zeitstempel enthält, handelt es sich in beiden
+Fällen um Warte- bzw. Liegezeiten und nicht um reine Bearbeitungszeiten
+(vgl. \autoref{sec:fehlende_daten}).
 
 \begin{table}[htbp]
 \centering
-\caption{KPIs Domestic vs International}
+\caption{Zentrale Kennzahlen Domestic vs.\ International (Celonis)}
 \label{tab:kpi_comparison}
+\small
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l c c @{}}
 \hline
-\textbf{KPI} & \textbf{Domestic} & \textbf{International} \\ \hline
+\textbf{Kennzahl} & \textbf{Domestic} & \textbf{International} \\ \hline
 Cases & 10.500 & 6.449 \\
-Happy-Path-Anteil & 43,98 \% (4.618) & 21,23 \% (1.369) \\
-Ø Durchlaufzeit Happy Path & 9 d & 66 d (Ø aller Cases: 75 d ohne Extreme) \\
-Konforme Cases & 81 \% (8,47k) & 38 \% (2,47k) \\
+Happy-Path-Anteil & 43,98\,\% (4.618) & 21,23\,\% (1.369) \\
+Ø Durchlaufzeit Happy Path & 9\,d & 66\,d \\
+Ø Durchlaufzeit aller Cases (ohne Extreme) & 9\,d & 75\,d (mit Extremen: 86\,d) \\
+Konforme Cases & 81\,\% (8,47\,Tsd.) & 38\,\% (2,47\,Tsd.) \\
 Verletzungstypen & 19 & 56 \\
-Ø TPT konform vs. verletzend & 10,4 vs. 16,3 d (+5,9 d) & 69,3 vs. 97,1 d (+27,8 d) \\
-Schritte pro Case konform vs. verletzend & 5,1 vs. 6,4 & 10,2 vs. 11,8 \\
-Rejected by EMPLOYEE & 1.212 Cases (12 \%), +9 d & 1.483 (23 \%), +18 d \\
-Rejected by ADMINISTRATION & 846 (8 \%), +11 d & 1.287 (20 \%), +15 d \\
-Declaration zweimal hintereinander eingereicht & 776 (7 \%), +12 d & 1.225 (19 \%), +20 d \\ \hline
+Ø Durchlaufzeit konform vs.\ verletzend & 10,4 vs.\ 16,3\,d (+5,9\,d) & 69,3 vs.\ 97,1\,d (+27,8\,d) \\
+Schritte pro Case konform vs.\ verletzend & 5,1 vs.\ 6,4 & 10,2 vs.\ 11,8 \\
+Rejected by EMPLOYEE & 1.212 (12\,\%), +9\,d & 1.483 (23\,\%), +18\,d \\
+Rejected by ADMINISTRATION & 846 (8\,\%), +11\,d & 1.287 (20\,\%), +15\,d \\
+Rejected by SUPERVISOR & 281 (3\,\%), +9\,d & \todo{Wert} \\
+Deklaration zweimal hintereinander eingereicht & 776 (7\,\%), +12\,d & 1.225 (19\,\%), +20\,d \\ \hline
 \end{tabular*}
 \end{table}
 
@@ -36,87 +56,359 @@ Declaration zweimal hintereinander eingereicht & 776 (7 \%), +12 d & 1.225 (19 \
 \subsection{Durchlaufzeiten}
 \label{sec:durchlaufzeiten}
 
-% Notizen:
-% Durchlaufzeit-Verteilung. International liegt der Durchschnitt bei 86 Tagen, mit langem
-% Tail bis 743 Tage (ca. 360 Cases im letzten Bin). Celonis nennt zusätzlich 75 Tage
-% "ohne Extreme". Nennt beide Werte und erklärt den Unterschied. Die Cases nach 2019 sind
-% sehr wenige und wahrscheinlich Ausreißer.
-%
-% Hinweis: 66 d International beginnen beim Permit -> nicht direkt mit 9 d Domestic
-% vergleichbar; fairer Zusatzvergleich: Declaration SUBMITTED -> Payment Handled.
+\paragraph{International.} Die durchschnittliche Durchlaufzeit vom ersten bis
+zum letzten Event eines Case beträgt 86 Tage. Die Verteilung ist stark
+rechtsschief (\autoref{fig:tpt_verteilung}): Die meisten Cases liegen in den
+ersten drei Klassen zwischen 7 und 86 Tagen (zusammen rund 4.200 Cases), danach
+fällt die Häufigkeit stetig ab. Auffällig ist die letzte Klasse von 224 bis
+743 Tagen mit rund 360 Cases. Dieser lange Ausläufer zieht den Mittelwert nach
+oben. Celonis weist deshalb je nach Analyse drei verschiedene Durchschnitte
+aus, die sorgfältig auseinanderzuhalten sind:
 
-\todo{Durchlaufzeiten schreiben, Screenshot Verteilung (figures/celonis/)}
+\begin{itemize}[noitemsep]
+	\item \textbf{86 Tage:} arithmetisches Mittel \emph{aller} Cases inklusive
+	Ausreißer (\textit{Throughput Times}),
+	\item \textbf{75 Tage:} Mittel aller Cases \emph{ohne Extremwerte}
+	(\textit{Process Overview}; Celonis schneidet hier Ausreißer ab),
+	\item \textbf{66 Tage:} Mittel nur der Happy-Path-Cases (häufigste Variante).
+\end{itemize}
+
+Für eine robuste Aussage ist eher der bereinigte Wert bzw.\ der Median
+heranzuziehen \todo{Median International aus Celonis ergänzen}. Die
+Unterscheidung ist auch für den Toolvergleich relevant, da eine einfache
+Mittelwertbildung über alle Cases in Python dem Wert von 86 und nicht von
+75 Tagen entspricht (vgl.\ \autoref{sec:toolvergleich}).
+
+Die Happy-Path-Cases sind damit nur rund neun Tage schneller als der
+bereinigte Durchschnitt aller Cases. Ein großer
+Teil der Durchlaufzeit entfällt also nicht auf Abweichungen, sondern ist
+strukturell bedingt: Ein International-Case beginnt bereits mit dem
+Reiseantrag (\textit{Permit}) und umfasst damit die gesamte Vorlaufzeit bis zur
+Reise sowie die Reise selbst (vgl.\ \autoref{sec:bottlenecks}).
+
+\paragraph{Domestic.} Inländische Deklarationen werden deutlich schneller
+abgeschlossen. Sowohl die Happy-Path-Cases als auch alle Cases (ohne Extreme)
+benötigen im Mittel rund 9 Tage. Ein Großteil der Cases durchläuft den Prozess
+somit innerhalb von etwa zwei Kalenderwochen.
+\todo{Verteilung Domestic (Throughput-Times-Histogramm) und Ø mit Extremen/Median ergänzen}
+
+Am unteren Ende der Verteilung fällt eine Variante mit einer Durchlaufzeit von
+null auf: 134 Domestic-Cases (1\,\%) bestehen aus einem einzigen Event
+\texttt{Declaration SAVED by EMPLOYEE}. Es handelt sich um gespeicherte, aber
+nie eingereichte Deklarationen. Diese Cases sind fachlich keine
+Prozessinstanzen im eigentlichen Sinn und verzerren Kennzahlen wie die
+mittlere Durchlaufzeit oder die Zahl der Cases ohne Auszahlung nach unten bzw.\
+oben. Für belastbare Auswertungen sollten sie herausgefiltert werden.
+
+\paragraph{Vergleichbarkeit.} Die Werte von 9 und 66 bzw.\ 75 Tagen sind nicht
+direkt vergleichbar, da beide Logs unterschiedliche Prozessausschnitte
+abbilden: Domestic beginnt mit dem Einreichen der Deklaration, International
+mit dem Reiseantrag. Ein fairerer Vergleich ergibt sich, wenn ausschließlich
+der gemeinsame Deklarationsteil von \texttt{Declaration SUBMITTED by EMPLOYEE}
+bis \texttt{Payment Handled} betrachtet wird. Hierfür benötigt International
+\todo{X\,d} gegenüber \todo{Y\,d} im Domestic-Log.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\textwidth]{figures/celonis/int_throughput.png}
+	\caption{Verteilung der Durchlaufzeiten (International, Celonis \textit{Throughput Times})}
+	\label{fig:tpt_verteilung}
+\end{figure}
+
+\paragraph{Zeitliche Muster.} Die Zahl neu gestarteter Cases pro Monat ist über
+den Beobachtungszeitraum nicht konstant. Im International-Log liegen 2017 rund
+10 Cases pro Tag vor, ab Januar 2018 steigt dieser Wert sprunghaft auf bis zu
+55 im April 2018 an. Dasselbe Muster zeigt sich im Domestic-Log
+(2.240 Case-Starts 2017 gegenüber 8.260 im Jahr 2018,
+\autoref{tab:basisstatistik}). Laut Datensatzbeschreibung umfasst der Log
+für 2017 nur zwei Fakultäten, ab 2018 dagegen die gesamte Universität
+\parencite{van_dongen_bpi_2020}. Der Anstieg ist somit ein Effekt der
+veränderten Grundgesamtheit und kein Hinweis auf ein gestiegenes
+Reiseaufkommen. Ab Anfang 2019 brechen die Case-Starts nahezu vollständig ab,
+vereinzelte Events reichen jedoch bis ins Jahr 2020. Dabei handelt es sich um
+wenige Nachzügler, die maßgeblich den langen Ausläufer der Verteilung
+verursachen. Umgekehrt sind Cases, die Ende 2018 starten, möglicherweise zum
+Zeitpunkt des Datenexports noch nicht abgeschlossen; ihre Durchlaufzeit wird
+dann systematisch unterschätzt.
 
 % ==================================================================
 \subsection{Bottlenecks}
 \label{sec:bottlenecks}
 
-\textbf{Domestic:} Die Wartezeiten sind kurz. Auffällig ist die Zahlungsphase:
-\texttt{FINAL\_APPROVED \textrightarrow\ Request Payment} (3 Arbeitstage) und
-\texttt{Request Payment \textrightarrow\ Payment Handled} (4 Arbeitstage), beide bei ca. 95\,\%
-der Cases. Das ist ein großer Teil der ca. 9 Tage Happy-Path-Dauer.
+Celonis ermittelt Bottlenecks als Übergänge zwischen zwei direkt
+aufeinanderfolgenden Aktivitäten, die die Durchlaufzeit besonders stark
+erhöhen (\autoref{fig:bottlenecks}).
 
-\textbf{International:} \texttt{Permit FINAL\_APPROVED \textrightarrow\ Start trip}
-dauert 39 Arbeitstage (65\,\% der Cases). Das ist vermutlich kein echter
-Engpass, sondern die Vorlaufzeit bis zur geplanten Reise. Der echte Hebel
-ist \texttt{End trip \textrightarrow\ Declaration SUBMITTED} mit 13 Arbeitstagen bei
-71\,\% der Cases, also die späte Einreichung durch den Mitarbeiter.
+\paragraph{Domestic.} Die Wartezeiten zwischen den Genehmigungsschritten sind
+mit ein bis zwei Arbeitstagen kurz. Die beiden langsamsten Übergänge liegen in
+der Zahlungsphase: \texttt{FINAL\_APPROVED by SUPERVISOR \textrightarrow\ Request
+Payment} (3\,AT, 96\,\% der Cases) und \texttt{Request Payment \textrightarrow\
+Payment Handled} (4\,AT, 95\,\%). Zusammen entfallen damit rund sieben
+Arbeitstage auf die Zeit \emph{nach} der inhaltlichen Genehmigung, was den
+überwiegenden Teil der rund neun Kalendertage Happy-Path-Dauer ausmacht.
+Da beide Schritte vom Benutzer \texttt{SYSTEM} ausgeführt werden, liegt die
+Vermutung nahe, dass Zahlungen nicht einzeln, sondern in periodischen
+Zahlungsläufen (Batches) verarbeitet werden. An dritter Stelle folgt
+\texttt{APPROVED by BUDGET OWNER \textrightarrow\ FINAL\_APPROVED by
+SUPERVISOR} (3\,AT, 26\,\%): Die zusätzliche Freigabe durch den
+Budgetverantwortlichen verlängert die betroffenen Cases also spürbar.
 
-\texttt{Permit FINAL\_APPROVED \textrightarrow\ Declaration SUBMITTED}
-(17 Arbeitstage, 12\,\% der Cases) betrifft Fälle ohne Reise-Events.
-Das sollte kurz erklärt oder nachgeprüft werden.
+\paragraph{International.} Der laut Celonis langsamste Übergang ist
+\texttt{Permit FINAL\_APPROVED by SUPERVISOR \textrightarrow\ Start trip}
+(39\,AT, 65\,\% der Cases). Fachlich handelt es sich dabei jedoch nicht um
+einen Engpass, sondern um die gewünschte Vorlaufzeit zwischen Genehmigung und
+geplantem Reisebeginn. Gleiches gilt für \texttt{Start trip \textrightarrow\
+End trip} (5\,AT, 90\,\%), das die Reisedauer abbildet. Ein algorithmisch
+erkannter Bottleneck muss somit immer fachlich interpretiert werden.
+
+Der eigentliche Hebel liegt bei \texttt{End trip \textrightarrow\ Declaration
+SUBMITTED by EMPLOYEE} mit 13 Arbeitstagen bei 71\,\% der Cases. Diese Zeit
+liegt vollständig im Verantwortungsbereich der Reisenden, die ihre Deklaration
+im Mittel erst knapp drei Wochen nach Reiseende einreichen. Die anschließende
+Zahlungsphase (\texttt{Request Payment \textrightarrow\ Payment Handled},
+3\,AT, 95\,\%) entspricht weitgehend dem Domestic-Prozess.
+
+Auffällig ist außerdem der Übergang \texttt{Permit FINAL\_APPROVED by
+SUPERVISOR \textrightarrow\ Declaration SUBMITTED by EMPLOYEE} (17\,AT,
+12\,\%), bei dem die Reise-Events zwischen Genehmigung und Abrechnung fehlen.
+Da jeder International-Case genau ein \texttt{Start trip} und ein
+\texttt{End trip} enthält, liegt die Reise hier an anderer Stelle im Case.
+Diese Anomalie wird in \autoref{sec:unerwartet} näher untersucht.
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/dom_bottlenecks.png}
+		\caption{Domestic}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/int_bottlenecks.png}
+		\caption{International}
+	\end{subfigure}
+	\caption{Langsamste Übergänge laut Celonis-Bottleneck-Analyse}
+	\label{fig:bottlenecks}
+\end{figure}
 
 % ==================================================================
 \subsection{Ablehnungen}
 \label{sec:rejections}
 
-% Notizen:
-% "Rejected by EMPLOYEE" ist plausibel eine Folgeaktivität. In 20 % der International-Cases
-% folgt es innerhalb von 3 Arbeitstagen direkt auf "Rejected by ADMINISTRATION". Das stützt
-% die Annahme, dass der Mitarbeiter die Rückgabe bestätigt, aber es bleibt eine Hypothese.
-%
-% Doppelte Einreichungen (19 % bzw. 7 %) sind eine Rework-Schleife, wahrscheinlich nach
-% einer Ablehnung.
-%
-% Offen: Anteil nie bezahlter Cases (kein "Payment Handled"); Gründe stehen nicht im Log
-% -> nur Indizien (Betrag, Jahr, Budget-Owner-Beteiligung) per Celonis-Filter vergleichen.
+Ablehnungen treten in beiden Logs auf drei Ebenen auf: durch die
+Administration, durch den Vorgesetzten (\textit{Supervisor}) sowie als
+Aktivität \texttt{Declaration REJECTED by EMPLOYEE}. Im Domestic-Log wird die
+Deklaration in 846 Cases (8\,\%) von der Administration und in 281 Cases
+(3\,\%) vom Supervisor abgelehnt. Im International-Log sind Ablehnungen durch
+die Administration mit 1.287 Cases (20\,\%) mehr als doppelt so häufig
+(\autoref{tab:kpi_comparison}). Insgesamt enthalten \todo{X\,\%} der Domestic-
+und \todo{Y\,\%} der International-Cases mindestens eine Ablehnung.
 
-\todo{Ablehnungen je Rolle, Rework, nie bezahlte Cases, mögliche Gründe}
+Die Zahl der Ablehnungs-Events übersteigt jeweils die Zahl der betroffenen
+Cases (z.\,B.\ Domestic: 952 Events in 846 Cases bei der Administration,
+International: 1.549 Events in 1.287 Cases). Einzelne Deklarationen werden
+folglich mehrfach zurückgewiesen.
+
+\paragraph{Rolle von \enquote{Rejected by EMPLOYEE}.} Diese Aktivität ist mit
+12\,\% (Domestic) bzw.\ 23\,\% (International) die häufigste Ablehnungsform. Im
+International-Log folgt sie in 20\,\% der Cases innerhalb von etwa drei
+Arbeitstagen direkt auf \texttt{Declaration REJECTED by ADMINISTRATION}
+(\autoref{fig:bottlenecks}). Dies spricht dafür, dass es sich nicht um eine
+eigenständige Ablehnung durch den Mitarbeitenden handelt, sondern um die
+Bestätigung bzw.\ Rücknahme einer bereits zurückgewiesenen Deklaration. Diese
+Interpretation bleibt allerdings eine Hypothese, da der Log keine Semantik der
+Aktivitäten mitliefert.
+
+\paragraph{Rework-Effekt.} Ablehnungen erzeugen Nacharbeit. In 776
+Domestic-Cases (7\,\%) und 1.225 International-Cases (19\,\%) folgt auf
+\texttt{Declaration SUBMITTED by EMPLOYEE} erneut ein Einreichen, also eine
+Korrekturschleife. Diese Cases dauern im Mittel 12 bzw.\ 20 Tage länger und
+umfassen 3,6 bzw.\ 4,6 zusätzliche Schritte. Jede Ablehnungsform verlängert
+die Durchlaufzeit um 9 bis 18 Tage (\autoref{tab:kpi_comparison}). Im
+Domestic-Log bedeutet dies mehr als eine Verdopplung gegenüber dem Happy Path.
+
+\paragraph{Nicht bezahlte Cases.} Von den 10.500 Domestic-Cases enthalten
+10.044 die Aktivität \texttt{Payment Handled}. Damit endet für 456 Cases
+(4,3\,\%) der Prozess ohne Auszahlung, sei es durch endgültige Ablehnung,
+Abbruch oder weil der Case zum Exportzeitpunkt noch offen war. 134 dieser
+Cases (1\,\%) bestehen lediglich aus \texttt{Declaration SAVED by EMPLOYEE},
+wurden also nie eingereicht (vgl.\ \autoref{sec:durchlaufzeiten}). Für International ergeben sich
+\todo{Anzahl ohne Payment Handled} nicht bezahlte Cases.
+
+\begin{sloppypar}
+\paragraph{Ablehnungsgründe.} Die Gründe einer Ablehnung sind im Log nicht
+enthalten. Es lassen sich lediglich Indizien über Case-Attribute prüfen. Beide
+Logs enthalten den Betrag (\texttt{Amount}). Im International-Log stehen
+darüber hinaus der beantragte und der angepasste Betrag
+(\texttt{RequestedAmount}, \texttt{AdjustedAmount}), das beantragte Budget
+(\texttt{Permit RequestedBudget}) sowie die Organisationseinheit zur
+Verfügung. Ein Vergleich
+abgelehnter und nicht abgelehnter Cases in Celonis zeigt
+\todo{Ergebnis Root-Cause-Analyse / Betragsvergleich einfügen, z.\,B.\ Ø Amount
+abgelehnt vs.\ nicht abgelehnt, Anteil 2017 vs.\ 2018, Anteil mit BUDGET OWNER}.
+Diese Zusammenhänge sind korrelativ und erlauben keine kausale Aussage.
+\end{sloppypar}
 
 % ==================================================================
 \subsection{Unerwartetes Verhalten}
 \label{sec:unerwartet}
 
-748 International-Cases (12\,\%) starten mit \texttt{Start trip}, haben
-also keinen vorherigen Permit-Antrag, und dauern 29 Tage länger. Das ist
-die quantifizierte Antwort auf die Frage nach fehlenden Permits.
+\paragraph{Fehlende Reiseanträge.} 748 International-Cases (12\,\%) beginnen
+direkt mit \texttt{Start trip}, ohne dass zuvor ein Reiseantrag eingereicht
+wurde. Diese Cases dauern im Mittel 29 Tage länger als die übrigen
+(\autoref{fig:violations}). Gleichzeitig enthalten 6.001 der 6.449 Cases ein
+\texttt{Permit SUBMITTED by EMPLOYEE}. Rund 448 Cases kommen also gänzlich
+ohne Reiseantrag aus, während in rund 300 weiteren Cases der Antrag erst nach
+Reisebeginn, also nachträglich, gestellt wird. Beides widerspricht der
+Annahme, dass eine Dienstreise vorab genehmigt sein muss.
+\todo{Regel-Check Jesco: Trip/Deklaration ohne Permit gegenprüfen}
 
-637 Cases (10\,\%) haben \texttt{Permit FINAL\_APPROVED by DIRECTOR}
-bzw. \texttt{Permit APPROVED by SUPERVISOR}, mit +52 Tagen. Vermutlich
-handelt es sich um eine Eskalation bei teuren Reisen; das ist allerdings
-eine Hypothese.
+\paragraph{Zusätzliche Genehmigungsstufen.} In jeweils 637 Cases (10\,\%)
+treten \texttt{Permit APPROVED by SUPERVISOR} und \texttt{Permit
+FINAL\_APPROVED by DIRECTOR} auf; die identische Fallzahl legt nahe, dass beide
+Aktivitäten gemeinsam vorkommen. Der Supervisor gibt den Antrag hier nur
+vorläufig frei, die finale Genehmigung erfolgt durch die Leitungsebene. Diese
+Cases dauern 52 Tage länger und stellen damit die teuerste Abweichung im
+International-Log dar. Vermutlich handelt es sich um eine Eskalationsstufe für
+kostenintensive Reisen oder Reisen bestimmter Organisationseinheiten
+\todo{per Celonis-Filter prüfen: Ø RequestedBudget mit vs.\ ohne DIRECTOR}.
 
-% Offen (Jesco, Python): Regel-Checks gegenprüfen -- Trip/Deklaration ohne Permit,
-% Doppelzahlungen (Payment Handled > 1), Declaration SUBMITTED vor End trip.
+\paragraph{Nachträglich genehmigte Reisen.} In 776 International-Cases
+(12\,\%) wird unmittelbar nach der finalen Permit-Genehmigung die Deklaration
+eingereicht, also \texttt{Permit FINAL\_APPROVED by SUPERVISOR}
+\textrightarrow\ \texttt{Declaration SUBMITTED by EMPLOYEE} (17\,AT,
+\autoref{fig:bottlenecks}). Eine Auswertung der Event-Reihenfolge zeigt, wo
+die Reise in diesen Cases liegt:
+
+\begin{itemize}[noitemsep]
+	\item In 582 Cases (75\,\%) ist die Reise bereits \emph{vollständig
+	beendet}, bevor der Antrag final genehmigt wird. 488 davon beginnen sogar
+	mit \texttt{Start trip} und überschneiden sich damit mit der oben
+	beschriebenen Gruppe der 748 Cases.
+	\item In 53 Cases (7\,\%) fällt die finale Genehmigung in den Zeitraum der
+	Reise.
+	\item Nur in 141 Cases (18\,\%) wird die Deklaration tatsächlich vor
+	Reisebeginn eingereicht, etwa für vorab anfallende Flug- oder
+	Konferenzkosten.
+\end{itemize}
+
+Der Bottleneck aus \autoref{sec:bottlenecks} beschreibt also überwiegend
+Reisen, die erst im Nachhinein genehmigt werden. Die Genehmigung wirkt hier
+nicht als Vorab-Kontrolle, sondern als nachgelagerte Formalität vor der
+Abrechnung. Zusammen mit den Cases ohne Reiseantrag zeigt dies, dass die
+Vorab-Genehmigungspflicht in einem nennenswerten Teil der Reisen nicht
+eingehalten wird.
+% Quelle der Zahlen: eigene Auswertung der Event-Reihenfolge im XES (Eziz, 15.10.),
+% sollte von Jesco in PM4Py gegengeprueft werden.
+
+\paragraph{Mehrfache Einreichungen.} Neben den Korrekturschleifen nach einer
+Ablehnung folgt in 193 Domestic-Cases (2\,\%) auf \texttt{Declaration
+APPROVED by ADMINISTRATION} unmittelbar ein erneutes Einreichen (+12\,d).
+Eine bereits genehmigte Deklaration wird hier also erneut eingereicht, ohne
+dass eine Ablehnung protokolliert ist. Entweder fehlt das Ablehnungs-Event im
+Log, oder Mitarbeitende ziehen die Deklaration selbst zurück.
+
+% Offen (Jesco, Python): Regel-Checks gegenprüfen -- Doppelzahlungen
+% (Payment Handled > 1), Declaration SUBMITTED vor End trip.
+\todo{Jesco: Doppelzahlungen (Payment Handled > 1) ergänzen}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/dom_violations.png}
+		\caption{Domestic}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/int_violations.png}
+		\caption{International}
+	\end{subfigure}
+	\caption{Häufigste Abweichungen vom Referenzmodell mit Effekt auf Durchlaufzeit und Schrittanzahl (Celonis \textit{Conformance})}
+	\label{fig:violations}
+\end{figure}
 
 % ==================================================================
 \subsection{Muster mangelnder Konformität}
 \label{sec:nonconformance}
 
-% Notizen:
-% Das Referenzmodell ist nicht normativ. Celonis leitet den Happy Path algorithmisch ab.
-% "Undesired activity" heißt nur, dass die Aktivität nicht im Happy Path liegt.
-% BUDGET OWNER (27-28 %) oder PRE_APPROVER (6 %) sind deshalb vermutlich legitime Schritte.
-% Die 38 % bzw. 81 % konformer Cases solltet ihr als "Abweichung vom häufigsten Pfad"
-% formulieren, nicht als Regelverstoß.
-%
-% Sprung Anfang 2018. In beiden Conformance-Verläufen steigt die Konformität ab 2018-01
-% deutlich (Domestic ca. 60 % -> 85 %, International ca. 30 % -> 45 %).
-% ACHTUNG: Laut BPIC-2020-Beschreibung umfassen die Daten 2017 nur zwei Fakultäten,
-% 2018 die gesamte Universität (Case-Starts Domestic: 2.240 in 2017 vs. 8.260 in 2018).
-% Der Anstieg ist daher sehr wahrscheinlich ein Effekt der veränderten Grundgesamtheit,
-% nicht (nur) einer Prozessänderung \parencite{van_dongen_bpi_2020}.
-%
-% Offen (Jesco): Alignments/Fitness gegen normatives Modell -> echte Non-Conformance.
+Conformance Checking vergleicht das beobachtete Verhalten mit einem
+Referenzmodell \parencite{carmona_conformance_2018}. Das Referenzmodell in
+Celonis ist dabei nicht identisch mit dem Happy Path aus
+\autoref{sec:prozessfluss}, sondern wurde aus den häufigsten Varianten
+generiert. Das lässt sich an den Zahlen ablesen: Im Domestic-Log decken die
+drei häufigsten Varianten (44\,\% + 23\,\% + 13\,\%) genau die 8,47\,Tsd.\ als
+konform ausgewiesenen Cases (81\,\%) ab, im International-Log entsprechen die
+2,47\,Tsd.\ konformen Cases (38\,\%) den \todo{drei bzw.\ vier} häufigsten
+Varianten.
 
-\todo{Non-Conformance-Muster zusammenführen; Alignment-Ergebnisse von Jesco einarbeiten}
+Dieses Modell ist \emph{deskriptiv} und nicht \emph{normativ}: Ob eine
+Aktivität als Verletzung (\enquote{undesired activity}) gilt, hängt allein
+davon ab, ob sie in einer der häufigsten Varianten vorkommt. So gilt die
+Freigabe durch den \texttt{BUDGET OWNER} (27--28\,\% der Cases) als konform,
+weil sie in den Varianten 2 und 3 enthalten ist. Die fachlich vergleichbare
+Freigabe durch den \texttt{PRE\_APPROVER} (6\,\%, 666 Cases) taucht dagegen
+als Verletzung auf (\autoref{fig:violations}), obwohl auch sie sehr
+wahrscheinlich ein legitimer Prozessschritt ist. Die Allowlist von Celonis,
+über die sich solche Schritte ausnehmen ließen, wurde bewusst nicht genutzt
+(0 allowlisted violations), um die Rohwerte zu zeigen. Die
+Konformitätsquoten sind daher als \enquote{Anteil der Cases, die einer der
+häufigsten Varianten folgen} zu lesen, nicht als Anteil regelkonformer Cases.
+
+Unter dieser Einschränkung verlaufen 81\,\% der Domestic-Cases konform,
+aber nur 38\,\% der International-Cases. Celonis identifiziert 19 bzw.\ 56
+Verletzungstypen. Abweichende Cases dauern 5,9 Tage (Domestic) bzw.\
+27,8 Tage (International) länger und umfassen mehr Schritte
+(\autoref{tab:kpi_comparison}). Inhaltlich lassen sich die Abweichungen zu
+vier Mustern verdichten:
+
+\begin{enumerate}[noitemsep]
+	\item \textbf{Rework-Schleifen:} Ablehnungen mit anschließender
+	Neueinreichung (\autoref{sec:rejections}) sind in beiden Logs die
+	häufigsten Verletzungen.
+	\item \textbf{Fehlende oder nachträgliche Reiseanträge:} 12\,\% der
+	International-Cases starten ohne vorherigen Permit, in weiteren Cases wird
+	die Reise erst nach ihrem Ende genehmigt (\autoref{sec:unerwartet}).
+	\item \textbf{Späte Einreichung:} Die Deklaration wird im Mittel
+	13 Arbeitstage nach Reiseende eingereicht (\autoref{sec:bottlenecks}).
+	\item \textbf{Zusätzliche Genehmigungsstufen:} Pre-Approver und Director
+	verlängern die Cases und gelten als Verletzung, sind aber vermutlich
+	regelkonform.
+\end{enumerate}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/dom_conformance.png}
+		\caption{Domestic}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/int_conformance.png}
+		\caption{International}
+	\end{subfigure}
+	\caption{Konformitätsverlauf pro Monat (Celonis \textit{Conformance Overview})}
+	\label{fig:conformance_history}
+\end{figure}
+
+\paragraph{Zeitlicher Verlauf.} Der Konformitätsverlauf
+(\autoref{fig:conformance_history}) zeigt in beiden Logs einen deutlichen
+Sprung zum Januar 2018: Im Domestic-Log steigt die Quote von etwa 50--75\,\% im
+Jahr 2017 auf konstant 80--90\,\%, im International-Log von etwa 20--35\,\% auf
+40--47\,\%. Dieser Zeitpunkt fällt exakt mit der Ausweitung des Datensatzes
+von zwei Fakultäten auf die gesamte Universität zusammen
+\parencite{van_dongen_bpi_2020}. Da die Daten ab 2018 etwa viermal so viele
+Cases umfassen, bestimmen sie zugleich maßgeblich die häufigsten Varianten
+und damit das Referenzmodell, gegen das geprüft wird. Der Anstieg ist daher sehr wahrscheinlich ein Effekt der
+veränderten Grundgesamtheit und kein Beleg für eine Prozessverbesserung. Für
+eine belastbare Aussage müssten beide Jahre getrennt bzw.\ nur dieselben
+Organisationseinheiten verglichen werden.
+
+\paragraph{Abgleich mit normativem Modell.} Um echte Non-Conformance von bloßen
+Abweichungen vom häufigsten Pfad zu unterscheiden, wurde in PM4Py zusätzlich
+ein normatives Modell gegen beide Logs geprüft.
+\todo{Jesco: Alignment-Fitness und Anteil konformer Cases gegen normatives Modell einarbeiten und mit 81\,\%/38\,\% vergleichen}

@@ -9,5 +9,13 @@
 % - Stärken Celonis (schnelle visuelle Exploration, Dashboarding, PQL) vs.
 %   Python/PM4Py (Flexibilität, spezifische Algorithmen) \parencite{berti_process_2019,vogelgesang_celonis_2022}
 % - Ergebnisvergleich: Abweichungen bei Varianten, Durchlaufzeiten, Konformitätsquote?
+%   * Durchlaufzeit International: Celonis zeigt 86 d (alle Cases, Throughput Times),
+%     75 d (ohne Extremwerte, Process Overview) und 66 d (Happy Path). Ein mean() in
+%     Python ergibt ~86 d -> Beispiel dafür, dass Standard-KPIs in BI-Tools still
+%     trimmen und von Rohdaten-Berechnungen abweichen (vgl. Abschnitt 3.1).
+%   * Konformität: Celonis prüft gegen ein aus den Top-Varianten generiertes Modell
+%     (81 % / 38 %), PM4Py gegen normatives Modell (Alignments) -> Werte nicht 1:1 vergleichbar.
+%   * Datenqualität: 134 Domestic-Cases mit nur "Declaration SAVED" (0 d Durchlaufzeit)
+%     -> beeinflussen Mittelwerte je nach Filterung in beiden Tools unterschiedlich.
 
 \todo{Tool-Vergleich (gemeinsam)}
