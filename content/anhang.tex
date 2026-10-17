@@ -3,3 +3,42 @@
 \addcontentsline{toc}{section}{Anhang}
 \section*{Anhang}
 \label{sec:anhang}
+
+
+\begin{figure}[htbp]
+	\centering
+	% --- Obere Zeile: BPMN-Referenzmodelle (International) ---
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/int_bpmn_v1.png}
+		\caption{Striktes Happy-Path-Modell (nur Variante 1)}
+		\label{fig:int_conf_model_strict}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/int_bpmn_top3.png}
+		\caption{Erweitertes Kernmodell (mit XOR-Gateways)}
+		\label{fig:int_conf_model_top3}
+	\end{subfigure}
+
+	\vspace{0.4cm}
+
+	% --- Untere Zeile: Zugehörige Conformance-Verläufe (International) ---
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/int_conf_v1.png}
+		\caption{Konformitätsverlauf bei striktem Happy Path (21\,\%)}
+		\label{fig:int_conf_hist_strict}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/int_conf_top3.png}
+		\caption{Konformitätsverlauf bei erweitertem Modell (38\,\%)}
+		\label{fig:int_conf_hist_top3}
+	\end{subfigure}
+
+	\caption{Einfluss des Referenzmodells auf die gemessene Konformität im International-Log (links: nur Variante 1 mit 0\,\% Konformität bis Ende 2017; rechts: erweitertes Modell inkl.\ optionaler Administration und Budget Owner)}
+	\label{fig:conformance_comparison_int}
+\end{figure}

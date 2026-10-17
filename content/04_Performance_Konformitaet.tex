@@ -74,8 +74,9 @@ aus, die sorgfältig auseinanderzuhalten sind:
 \end{itemize}
 
 Für eine robuste Aussage ist eher der bereinigte Wert bzw.\ der Median
-heranzuziehen \todo{Median International aus Celonis ergänzen}. Die
-Unterscheidung ist auch für den Toolvergleich relevant, da eine einfache
+heranzuziehen. Der Median liegt bei 66 Tagen über alle Cases,
+wobei 55 Tage auf die Happy-Path-Cases entfallen.
+Die Unterscheidung ist auch für den Toolvergleich relevant, da eine einfache
 Mittelwertbildung über alle Cases in Python dem Wert von 86 und nicht von
 75 Tagen entspricht (vgl.\ \autoref{sec:toolvergleich}).
 
@@ -334,81 +335,77 @@ Log, oder Mitarbeitende ziehen die Deklaration selbst zurück.
 \subsection{Muster mangelnder Konformität}
 \label{sec:nonconformance}
 
-Conformance Checking vergleicht das beobachtete Verhalten mit einem
-Referenzmodell \parencite{carmona_conformance_2018}. Das Referenzmodell in
-Celonis ist dabei nicht identisch mit dem Happy Path aus
-\autoref{sec:prozessfluss}, sondern wurde aus den häufigsten Varianten
-generiert. Das lässt sich an den Zahlen ablesen: Im Domestic-Log decken die
-drei häufigsten Varianten (44\,\% + 23\,\% + 13\,\%) genau die 8,47\,Tsd.\ als
-konform ausgewiesenen Cases (81\,\%) ab, im International-Log entsprechen die
-2,47\,Tsd.\ konformen Cases (38\,\%) den \todo{drei bzw.\ vier} häufigsten
-Varianten.
-
-Dieses Modell ist \emph{deskriptiv} und nicht \emph{normativ}: Ob eine
-Aktivität als Verletzung (\enquote{undesired activity}) gilt, hängt allein
-davon ab, ob sie in einer der häufigsten Varianten vorkommt. So gilt die
-Freigabe durch den \texttt{BUDGET OWNER} (27--28\,\% der Cases) als konform,
-weil sie in den Varianten 2 und 3 enthalten ist. Die fachlich vergleichbare
-Freigabe durch den \texttt{PRE\_APPROVER} (6\,\%, 666 Cases) taucht dagegen
-als Verletzung auf (\autoref{fig:violations}), obwohl auch sie sehr
-wahrscheinlich ein legitimer Prozessschritt ist. Die Allowlist von Celonis,
-über die sich solche Schritte ausnehmen ließen, wurde bewusst nicht genutzt
-(0 allowlisted violations), um die Rohwerte zu zeigen. Die
-Konformitätsquoten sind daher als \enquote{Anteil der Cases, die einer der
-häufigsten Varianten folgen} zu lesen, nicht als Anteil regelkonformer Cases.
-
-Unter dieser Einschränkung verlaufen 81\,\% der Domestic-Cases konform,
-aber nur 38\,\% der International-Cases. Celonis identifiziert 19 bzw.\ 56
-Verletzungstypen. Abweichende Cases dauern 5,9 Tage (Domestic) bzw.\
-27,8 Tage (International) länger und umfassen mehr Schritte
-(\autoref{tab:kpi_comparison}). Inhaltlich lassen sich die Abweichungen zu
-vier Mustern verdichten:
+Conformance Checking gleicht das im Event-Log beobachtete Verhalten systematisch mit einem Referenzmodell ab \parencite{carmona_conformance_2018}. Eine zentrale Erkenntnis dieser Untersuchung ist, dass die ausgewiesene Konformitätsquote sowie ihre zeitliche Entwicklung unmittelbar von der Wahl und dem Abstraktionsgrad dieses Referenzmodells abhängen. Um diesen Effekt zu quantifizieren, wurde das automatische Conformance Checking in Celonis zweistufig durchgeführt (\autoref{fig:conformance_comparison}):
 
 \begin{enumerate}[noitemsep]
-	\item \textbf{Rework-Schleifen:} Ablehnungen mit anschließender
-	Neueinreichung (\autoref{sec:rejections}) sind in beiden Logs die
-	häufigsten Verletzungen.
-	\item \textbf{Fehlende oder nachträgliche Reiseanträge:} 12\,\% der
-	International-Cases starten ohne vorherigen Permit, in weiteren Cases wird
-	die Reise erst nach ihrem Ende genehmigt (\autoref{sec:unerwartet}).
-	\item \textbf{Späte Einreichung:} Die Deklaration wird im Mittel
-	13 Arbeitstage nach Reiseende eingereicht (\autoref{sec:bottlenecks}).
-	\item \textbf{Zusätzliche Genehmigungsstufen:} Pre-Approver und Director
-	verlängern die Cases und gelten als Verletzung, sind aber vermutlich
-	regelkonform.
+    \item \textbf{Striktes Happy-Path-Modell (nur Variante 1):} Wird im Domestic-Log ausschließlich die häufigste Prozessvariante als Soll-Modell definiert (\autoref{fig:conf_model_strict}), beträgt die Gesamtkonformität exakt 44\,\% (4,62\,Tsd.\ Cases) (\autoref{fig:conf_hist_strict}). Der zeitliche Verlauf offenbart dabei ein extremes Muster: Von Januar bis Oktober 2017 liegt die Konformitätsquote bei $\approx 0\,\%$ und springt erst im Januar 2018 unvermittelt auf konstant 55--60\,\%.
+    \item \textbf{Erweitertes Kernmodell (Top-3-Varianten mit XOR-Gateways):} Werden über exklusive Gateways (XOR) zusätzlich die Freigabe durch den \texttt{BUDGET OWNER} (Variante 2, 23\,\%) sowie das Überspringen der Administration (Variante 3, 13\,\%) als optionale Pfade zugelassen (\autoref{fig:conf_model_top3}), steigt die Gesamtkonformität auf 81\,\% (8,47\,Tsd.\ Cases). Gleichzeitig erhöht sich die Konformität im Jahr 2017 sprunghaft auf 50--75\,\% und erreicht ab Januar 2018 Werte zwischen 80\,\% und 90\,\% (\autoref{fig:conf_hist_top3}).
 \end{enumerate}
 
+Ein völlig analoges Bild zeigt sich im International-Log: Gegenüber dem strikten Happy-Path-Modell (21\,\% Gesamtkonformität, 1,37\,Tsd.\ Cases) liegt die Konformität bis einschließlich Dezember 2017 ebenfalls bei 0\,\% und steigt erst im erweiterten Modell (Top-3-Varianten mit XOR-Verzweigungen für Administration und Budget Owner) auf insgesamt 38\,\% (2,47\,Tsd.\ Cases; 20--35\,\% in 2017 vs.\ 40--47\,\% ab 2018; siehe \autoref{fig:conformance_comparison_int} im Anhang).
+
 \begin{figure}[htbp]
-	\centering
-	\begin{subfigure}[t]{0.49\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{figures/celonis/dom_conformance.png}
-		\caption{Domestic}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.49\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{figures/celonis/int_conformance.png}
-		\caption{International}
-	\end{subfigure}
-	\caption{Konformitätsverlauf pro Monat (Celonis \textit{Conformance Overview})}
-	\label{fig:conformance_history}
+    \centering
+    % --- Obere Zeile: BPMN-Referenzmodelle ---
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/celonis/dom_bpmn_v1.png}
+        \caption{Striktes Happy-Path-Modell (nur Variante 1)}
+        \label{fig:conf_model_strict}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/celonis/dom_bpmn_top3.png}
+        \caption{Erweitertes Kernmodell (Top-3-Varianten mit XOR)}
+        \label{fig:conf_model_top3}
+    \end{subfigure}
+
+    \vspace{0.4cm}
+
+    % --- Untere Zeile: Zugehörige Conformance-Verläufe ---
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/celonis/dom_conf_v1.png}
+        \caption{Konformitätsverlauf bei striktem Happy Path (44\,\%)}
+        \label{fig:conf_hist_strict}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/celonis/dom_conf_top3.png}
+        \caption{Konformitätsverlauf bei Top-3-Varianten (81\,\%)}
+        \label{fig:conf_hist_top3}
+    \end{subfigure}
+
+    \caption{Einfluss des Referenzmodells auf die gemessene Konformität im Domestic-Log (links: nur Variante 1 mit $\approx 0\,\%$ Konformität in 2017; rechts: Top-3-Varianten inkl.\ Budget Owner)}
+    \label{fig:conformance_comparison}
 \end{figure}
 
-\paragraph{Zeitlicher Verlauf.} Der Konformitätsverlauf
-(\autoref{fig:conformance_history}) zeigt in beiden Logs einen deutlichen
-Sprung zum Januar 2018: Im Domestic-Log steigt die Quote von etwa 50--75\,\% im
-Jahr 2017 auf konstant 80--90\,\%, im International-Log von etwa 20--35\,\% auf
-40--47\,\%. Dieser Zeitpunkt fällt exakt mit der Ausweitung des Datensatzes
-von zwei Fakultäten auf die gesamte Universität zusammen
-\parencite{van_dongen_bpi_2020}. Da die Daten ab 2018 etwa viermal so viele
-Cases umfassen, bestimmen sie zugleich maßgeblich die häufigsten Varianten
-und damit das Referenzmodell, gegen das geprüft wird. Der Anstieg ist daher sehr wahrscheinlich ein Effekt der
-veränderten Grundgesamtheit und kein Beleg für eine Prozessverbesserung. Für
-eine belastbare Aussage müssten beide Jahre getrennt bzw.\ nur dieselben
-Organisationseinheiten verglichen werden.
+\paragraph{Zeitlicher Verlauf und das Rollout-Artefakt 2018.}
+Aus diesem Modellvergleich lassen sich zwei zentrale Schlüsse über die Prozesslandschaft der Universität ziehen.
+Erstens existierte der globale \enquote{Happy Path} (Variante 1) im Jahr 2017 in den beiden zuerst erfassten Pilotfakultäten faktisch nicht;
+dort durchliefen sämtliche Abrechnungen zwingend entweder einen \texttt{BUDGET OWNER}, einen \texttt{PRE\_APPROVER} oder übersprangen die Administration.
+Zweitens erklärt sich der markante Konformitätsanstieg zum Januar 2018 in beiden Logs nicht durch eine plötzliche operative Prozessverbesserung,
+sondern durch die Ausweitung der Datenerfassung auf die gesamte Universität \parencite{van_dongen_bpi_2020}.
+Da das Jahr 2018 rund viermal so viele Fälle umfasst wie das Pilotjahr 2017 (\autoref{tab:basisstatistik}),
+dominieren die neu angeschlossenen Fakultäten – in denen der schlanke Prozess ohne Budget Owner den Standard bildet – die Häufigkeitsverteilung des Gesamt-Logs.
+Ein datengetrieben aus den häufigsten Varianten generiertes Referenzmodell unterliegt somit einem Mengen-Bias zugunsten des Jahres 2018 und stuft abweichende
+Fakultätsprozesse aus 2017 systematisch häufiger als nicht konform ein.
 
-\paragraph{Abgleich mit normativem Modell.} Um echte Non-Conformance von bloßen
-Abweichungen vom häufigsten Pfad zu unterscheiden, wurde in PM4Py zusätzlich
-ein normatives Modell gegen beide Logs geprüft.
-\todo{Jesco: Alignment-Fitness und Anteil konformer Cases gegen normatives Modell einarbeiten und mit 81\,\%/38\,\% vergleichen}
+\paragraph{Deskriptive vs.\ normative Modellgrenzen.}
+Zugleich verdeutlicht das erweiterte Kernmodell (81\,\% bzw.\ 38\,\% Konformität) den Unterschied zwischen einem \emph{deskriptiven} (frequenzbasierten) und einem \emph{normativen} (regelgetriebenen) Referenzmodell: Ob eine Aktivität in Celonis als Regelverletzung (\enquote{undesired activity}) gewertet wird, hängt hier allein davon ab, ob sie in den ausgewählten Top-Varianten enthalten ist. Während die Freigabe durch den \texttt{BUDGET OWNER} (27--28\,\% der Cases) durch die Aufnahme der Varianten 2 und 3 als konform gilt, wird die fachlich vergleichbare Vorprüfung durch den \texttt{PRE\_APPROVER} (6\,\%, 666 Cases) als Verletzung gezählt (\autoref{fig:violations}), obwohl auch sie einen legitimen organisatorischen Prüfschritt darstellt. Die Allowlist von Celonis wurde bewusst nicht genutzt (0 allowlisted violations), um diese unverzerrten Rohwerte offenzulegen. Umgekehrt dürfte das automatisch generierte BPMN-Modell in Celonis aber auch nicht unkritisch auf weitere Varianten (z.\,B.\ Top-5) ausgeweitet werden: In diesem Fall würden auch Ablehnungsschleifen (\texttt{Declaration REJECTED by ADMINISTRATION} $\rightarrow$ \texttt{REJECTED by EMPLOYEE}) über ein XOR-Gateway als regulärer Modellpfad aufgenommen, wodurch echte Prozessfehler fälschlicherweise als \enquote{konform} eingestuft würden.
+
+\paragraph{Zusammenfassung der Non-Conformance-Muster.}
+Unter Berücksichtigung dieser Modellcharakteristik identifiziert Celonis im erweiterten Kernmodell 19 Verletzungstypen im Domestic- und 56 im International-Log. Nicht konforme Fälle dauern im Mittel 5,9 Tage (16,3 vs.\ 10,4\,d, Domestic) bzw.\ 27,8 Tage (97,1 vs.\ 69,3\,d, International) länger und erfordern durchschnittlich 1,3 bis 1,6 zusätzliche Prozessschritte (\autoref{tab:kpi_comparison}). Inhaltlich verdichten sich die Abweichungen auf vier zentrale Muster:
+
+\begin{enumerate}[noitemsep]
+    \item \textbf{Rework-Schleifen:} Ablehnungen mit anschließender Korrektur und Neueinreichung (\autoref{sec:rejections}) bilden in beiden Logs die häufigste und zeitintensivste Abweichung.
+    \item \textbf{Umgehung der Vorab-Genehmigungspflicht:} 12\,\% der Auslandsreisen starten gänzlich ohne eingereichtes Permit; in weiteren Fällen wird die Genehmigung erst nach Reiseende eingeholt (\autoref{sec:unerwartet}).
+    \item \textbf{Verzögerte Einreichung:} Deklarationen werden nach Reiseende erst mit erheblichem Verzug (Ø 13 Arbeitstage) eingereicht (\autoref{sec:bottlenecks}).
+    \item \textbf{Zusätzliche Eskalations- und Prüfstufen:} Die Einbindung von \texttt{PRE\_APPROVER} und \texttt{DIRECTOR} verlängert die Durchlaufzeit signifikant (bis zu +52\,d) und wird vom frequenzbasierten Modell als Verletzung markiert, stellt fachlich jedoch meist einen regelkonformen Sonderpfad dar.
+\end{enumerate}
+
+\paragraph{Abgleich mit normativem Modell (PM4Py).}
+Um echte Regelverstöße (Muster 1 und 2) trennscharf von legitimen organisatorischen Varianten (Muster 4) abzugrenzen, wurde in PM4Py ergänzend ein fachlich-normatives Referenzmodell definiert und mittels Alignments gegen beide Logs geprüft.
+\todo{Jesco: Alignment-Fitness und Anteil konformer Cases gegen normatives Modell einarbeiten und mit den 81\,\% / 38\,\% aus Celonis vergleichen}
