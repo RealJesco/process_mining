@@ -1,7 +1,7 @@
 \section{Einleitung}
 \label{sec:einleitung}
 
-% Umfang: ca. 1 Seite -- ZULETZT schreiben.
+% Umfang: ca. 1 Seite.
 % Gesamtumfang laut Assignment Guide: ca. 15 Seiten (2 Personen).
 %
 % Gliederung (Kapitel / Umfang):
@@ -12,32 +12,41 @@
 %   5 Tool-Vergleich: Celonis vs. Python (1-2 S.)    -> 05_Toolvergleich.tex
 %   6 Handlungsempfehlungen und Fazit (1-2 S.)       -> 06_Fazit.tex
 
-\todo{Einleitung schreiben (ca. 1 Seite)}
+Organisationen bilden ihre Abläufe zunehmend in Informationssystemen ab und erzeugen dabei umfangreiche Ereignisdaten.
+Process Mining nutzt diese Event-Logs, um tatsächlich gelebte Prozesse sichtbar zu machen, sie mit dem vorgesehenen Ablauf abzugleichen und gezielt Verbesserungspotenziale abzuleiten \parencite{van_der_aalst_process_2016}.
+Gerade in großen Organisationen ist das inzwischen ein etablierter Ansatz, um Transparenz über Durchlaufzeiten, Engpässe und Regelabweichungen zu gewinnen \parencite{reinkemeyer_process_2020}.
 
-\begin{itemize}
-    \item Vorstellung des Ziels der Arbeit: Anwendung von Process-Mining Techniken auf reale Log-Daten zur Prozessverbesserung.
-    \item Kurze Beschreibung des Datensatzes: \enquote{Domestic} und \enquote{International} XES aus der BPI Challenge 2020 \parencite{van_dongen_bpi_2020}.
-    \item Kontext: Daten stammen von Reisedeklarationen einer niederländischen Universität (TU Eindhoven), Zeitraum 2017--2018.
-    \item Methodik: Kurze Erläuterung, dass Celonis und Python (PM4Py) für die Analyse verwendet und verglichen werden \parencite{berti_process_2019,vogelgesang_celonis_2022}.
-    \item Relevanz von Process Mining \parencite{van_der_aalst_process_2016,reinkemeyer_process_2020}.
-    \item Überblick über den Aufbau der Arbeit.
-\end{itemize}
+Gegenstand dieser Arbeit ist der administrative Reisekostenprozess der Technischen Universität Eindhoven,
+dessen Daten im Rahmen der BPI Challenge 2020 veröffentlicht wurden \parencite{van_dongen_bpi_2020}.
+Die untersuchten Prozessinstanzen starten hauptsächlich in den Jahren 2017 und 2018 (die ersten Fälle im Auslandsprozess sind Ende 2016 datierbar),
+wobei ihre nachgelagerten Bearbeitungs- und Zahlungsereignisse bis in das Jahr 2019 und im Auslandsprozess vereinzelt bis in das Jahr 2020 hineinreichen.
+Methodisch ist zudem zu berücksichtigen, dass im Jahr 2017 zunächst nur zwei Pilotfakultäten erfasst wurden und erst ab 2018 ein universitätsweiter Rollout erfolgte \parencite{van_dongen_bpi_2020}.
 
+Ziel der Arbeit ist es, diesen Prozess mit Methoden des Process Mining zu analysieren und daraus konkrete Verbesserungsvorschläge abzuleiten.
+Im Mittelpunkt stehen die Fragen, wie der Prozess tatsächlich abläuft, wie lange die einzelnen Fälle dauern und wo Engpässe entstehen. Außerdem wird untersucht, wie häufig Erklärungen abgelehnt werden, welches unerwartete oder nicht konforme Verhalten auftritt und worin sich inländische und internationale Erklärungen unterscheiden. Für die Analyse werden zwei Werkzeuge parallel eingesetzt und anschließend verglichen: die kommerzielle Plattform Celonis mit ihrer Abfragesprache PQL \parencite{vogelgesang_celonis_2022} und die Open-Source-Bibliothek PM4Py für Python \parencite{berti_process_2019}.
 
+Die Arbeit ist wie folgt aufgebaut: Zunächst gibt Kapitel~\ref{sec:datensatzuebersicht} einen Überblick über Struktur und Datenqualität der beiden Event-Logs.
+Kapitel~\ref{sec:prozessfluss} beschreibt und visualisiert den grundlegenden Prozessfluss.
+Kapitel~\ref{sec:performance} untersucht Durchlaufzeiten, Engpässe, Ablehnungen sowie unerwartetes und nicht konformes Verhalten.
+Kapitel~\ref{sec:erweitert} benennt fehlende Informationen im Datensatz, zeigt Einsatzmöglichkeiten von Machine Learning auf und definiert Kennzahlen für die laufende Prozessüberwachung.
+Kapitel~\ref{sec:toolvergleich} vergleicht die Vorgehensweise und die Ergebnisse von Celonis und PM4Py.
+Abschließend leitet Kapitel~\ref{sec:fazit} Handlungsempfehlungen ab und fasst die Ergebnisse zusammen.
+
+% Leitfragen aus dem Assignment Guide (Zuordnung zu Kapiteln siehe plan_hausarbeit.md):
 %1: 'Describe and visualize the general underlying process flow (reasonable level of abstraction, BPMN / Petri nets).',
 %2: 'How long do the different process instances take? Are there any notable patterns?',
-Zeitliche Einordnung der verschiedenen Prozessabläufe und Muster
+% Zeitliche Einordnung der verschiedenen Prozessabläufe und Muster
 %3: 'Are there any bottlenecks? If yes, where? If yes, can you think of any reasons?',
-Bottlenecks und deren Ursachen
+% Bottlenecks und deren Ursachen
 %4: 'How many applications get rejected? Can you find any reasons?',
-Ablehnungsquote und Gründe
+% Ablehnungsquote und Gründe
 %5: 'Can you find any unexpected behavior, e.g. missing permits?',
-Unerwartetes Verhalten
+% Unerwartetes Verhalten
 %6: 'Are there any patterns that would suggest non-conformance?',
 %7: 'Are there notable differences between international and domestic declarations?',
-Unterschiede zwischen internationalen und inländischen Deklarationen
+% Unterschiede zwischen internationalen und inländischen Deklarationen
 %8: 'What is missing to provide more detailed insights into the processes?',
-Fehlende Informationen für detailliertere Einblicke -> Zuordnung / Zeitpunkte Prozessumstellungen/Prozessversionen
+% Fehlende Informationen für detailliertere Einblicke -> Zuordnung / Zeitpunkte Prozessumstellungen/Prozessversionen
 %9: 'Reflect on where supervised / unsupervised machine learning techniques could help to obtain further insights.',
 %10: 'Can you think of useful KPIs for the processes?',
 %11: 'Make specific recommendations for improving the processes.',
