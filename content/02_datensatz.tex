@@ -4,41 +4,68 @@
 \label{sec:datensatzuebersicht}
 Gegeben sind zwei XES-Dateien: InternationDeclarations.xes und DomesticDeclarations.xes, die je ein mit OpenXES generiertes konformes Log mit mehreren Traces und darunter Events enthalten.
 Der Log-Untersuchungszeitraum liegt zwischen dem \todo{Datum} und dem \todo{Datum}.
-% ------------------------------------------------------------------
-% Basisstatistik (direkt aus den XES-Dateien ausgelesen, 14.10.2026)
-% ------------------------------------------------------------------
-\begin{table}[htbp]
-\centering
-\caption{Basisstatistik der Event-Logs}
-\label{tab:basisstatistik}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l c c @{}}
-\hline
-\textbf{Kennzahl} & \textbf{Domestic} & \textbf{International} \\ \hline
-Cases & 10.500 & 6.449 \\
-Events & 56.437 & 72.151 \\
-Aktivitäten & 17 & 34 \\
-Varianten (Celonis) & 100 & 756 \\
-Case-Starts & & \\
-\quad 2016 / 2017 & -- / 2.240 & 20 / 1.552 \\
-\quad 2018 / 2019 & 8.345 / 301 & 5.322 / 176 \\
-\quad 2020        & -- & 1 \\
-Ressourcen (\texttt{org:resource}) & STAFF MEMBER, SYSTEM & STAFF MEMBER, SYSTEM \\ \hline
-\end{tabular*}
-\end{table}
 InternationalDeclarations.xes enthält 6.449 Traces mit insgesamt 72.151 Events, während DomesticDeclarations.xes 10.500 Traces mit insgesamt 56.437 Events enthält.
+\begin{table}[htbp]
+    \centering
+    \setstretch{1}
+    \renewcommand{\arraystretch}{1.1}
+    \setlength{\tabcolsep}{3pt}
+    \footnotesize
+    \begin{adjustbox}{max width=\textwidth}
+        \begin{tabular}{|c|l|r|*{5}{r}|r|*{5}{r}|}
+            \hline
+            \multicolumn{2}{|c|}{\textbf{Kennzahl}}
+                & \multicolumn{6}{c|}{\textbf{Domestic}}
+                & \multicolumn{6}{c|}{\textbf{International}} \\
+            \hline
+            & Jahr & Alle & 2016 & 2017 & 2018 & 2019 & 2020
+                   & Alle & 2016 & 2017 & 2018 & 2019 & 2020 \\
+            \hline
+            \multirow{4}{*}{\rotatebox[origin=c]{90}{Celonis}}
+                & Tracestart & 10500 & 0 & 2240 & 8260 & 0 & 0
+                             & 6449 & 3 & 1494 & 4952 & 0 & 0 \\
+                & Events     & 56437 &   &      &      &   &
+                             & 72151 &   &      &      &   &   \\
+                & Eventnamen & 17 &   &      &      &   &
+                             & 34 &   &      &      &   &   \\
+                & Abläufe  & 100 &   &      &      &   &
+                             & 756 &   &      &      &   &   \\
+            \hline
+            \multirow{5}{*}{\rotatebox[origin=c]{90}{Python}}
+                & Tracestart & 10500 & 0 & 2240 & 8260 & 0 & 0
+                             & 6449 & 20 & 1532 & 4897 & 0 & 0 \\
+                & Traces mit Events & 10500 & 0 & 2240 & 8345 & 301 & 0
+                                    & 6449 & 20 & 1552 & 5322 & 176 & 1 \\
+                & Events & 56437 & 0 & 9881 & 45921 & 635 & 0
+                                  & 72151 & 23 & 12532 & 59193 & 402 & 1 \\
+                & Eventnamen & 17 & 0 & 12 & 13 & 7 & 0
+                             & 34 & 2 & 24 & 29 & 10 & 1 \\
+                & Abläufe* & 99 & 0 & 41 & 77 & 15 & 0
+                             & 753 & 3 & 248 & 608 & 75 & 1 \\
+            \hline
+        \end{tabular}%
+    \end{adjustbox}
+    \caption{Basisstatistik der Event-Logs}
+    \label{tab:basisstatistik}
+    \vspace{-0.8cm}
+\end{table}
+
 \subsection{Trace-Attribute}
 Die Traces in beiden Dateien enthalten Metadaten wie die 'id', 'concept:name', 'BudgetNumber', 'DeclarationNumber' und 'Amount'.
 International enthält zusätzlich noch weitere Felder zu Permit, Travel oder Beträgen (Amounts).
 Auffällig ist, dass grundsätzlich alle Felder an jedem Trace der jeweiligen Datei Werte beinhalten, jedoch auch der Wert 'UNKNOWN' verwendet wird.
-\begin{figure}
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{figures/python/attribute}
-    \caption{}
+    \vspace{-0.25cm}
+    \includegraphics[width=1\textwidth]{figures/python/attribute}
+    \vspace{-0.75cm}
+    \caption{Attribut und deren Verteilung je Log}
 \end{figure}
-\begin{wrapfigure}{r}{0.45\textwidth}
-    \centering
-    \includegraphics[width=0.45\textwidth]{figures/python/permitid}
-    \caption{}
+\begin{wrapfigure}{l}{0.36\textwidth}
+    \vspace{-1.2cm}
+    \includegraphics[trim={0 0 5cm 3.5cm},clip,width=0.35\textwidth]{figures/python/permitid}
+    \vspace{-0.5cm}
+    \caption{Überblick Abweichungen Permit ID und Permit id}
     \label{fig:permitid}
 \end{wrapfigure}
 Zudem gibt es in der Vielzahl der Eigenattribute von International semantische Ähnlichkeiten, die untersucht wurden.
