@@ -117,27 +117,33 @@ Das Heuristic-PN-Modell läuft für den rohen International-Datensatz auf einen 
 % Trip raus
 Die Trip-Aktivitäten sind im International-Log der Beobachtung nach, nicht an die übrige Prozesskette gebunden.
 Da keine Inkonsistenzen existieren in dem isolierten Trip-Teil, läuft dieser Zweig daher unabhängig, weshalb eine Berücksichtigung in den Process-Minern nur die Bestimmungen erschweren würde.
-Daher wurde mit PM4Py noch eine weitere Analyse gestartet, bei der die Trip-Aktivitäten entfernt werden, wodurch sich der kombinierte F1-Score auf den rohen Logs beim Heuristic-Miner von 0,902 \footnote{Für eine Aufteilung in \(k\) Teil-Logs (\(i=1,\ldots,k\)) ist der kombinierte F1-Score kein Mittelwert der F1-Scores der Teilmodelle. Seien \(n_i\) die Eventzahl, \(P_i\) die Precision sowie \(M_i,C_i,R_i,Q_i\) die Zahlen fehlender, konsumierter, verbleibender und produzierter Tokens des jeweiligen Teilmodells. Die Precision wird nach Eventzahl gewichtet; die Log-Fitness wird aus den aufsummierten Tokenzahlen neu berechnet. Der kombinierte F1-Score ergibt sich dann zu:
+Daher wurde mit PM4Py noch eine weitere Analyse gestartet, bei der die Trip-Aktivitäten entfernt werden, wodurch sich der kombinierte F1-Score auf den rohen Logs beim Heuristic-Miner von 0,902 \footnote{Für eine Aufteilung in \(k\) Teil-Logs (\(i=1,\ldots,k\)) ist der kombinierte F1-Score kein Mittelwert der F1-Scores der Teilmodelle. Seien \(n_i\) die Eventzahl, \(P_i\) die Precision sowie \(M_i,C_i,R_i,Q_i\) die Zahlen fehlender, konsumierter, verbleibender und produzierter Tokens des jeweiligen Teilmodells. Die Precision wird nach Eventzahl gewichtet; die Log-Fitness wird aus den aufsummierten Tokenzahlen neu berechnet:
 \[ % Hat mir ChatGPT-6 Luna als Fußnotentext generiert anhand Prompt, das er den Code nochmal durchgucken soll, was das war und wie berechnet wird.
-\begin{aligned}
-P_{\mathrm{komb}} &=
-  \frac{\sum_i n_i P_i}{\sum_i n_i},\\
-LF_{\mathrm{komb}} &=
+P_{\mathrm{w}} =
+  \frac{\sum_i n_i P_i}{\sum_i n_i}
+\qquad\vert\qquad
+LF_{\mathrm{w}} =
   \frac{1}{2}\left(1-\frac{\sum_i M_i}{\sum_i C_i}\right)
-  +\frac{1}{2}\left(1-\frac{\sum_i R_i}{\sum_i Q_i}\right),\\
-F_{1,\mathrm{komb}} &=
-  \frac{2\,LF_{\mathrm{komb}}\,P_{\mathrm{komb}}}
-       {LF_{\mathrm{komb}}+P_{\mathrm{komb}}}.
-\end{aligned}
+  +\frac{1}{2}\left(1-\frac{\sum_i R_i}{\sum_i Q_i}\right)
+\qquad\vert\qquad
+F_{1,\mathrm{w}} =
+  \frac{2\,LF_{\mathrm{w}}\,P_{\mathrm{w}}}
+       {LF_{\mathrm{w}}+P_{\mathrm{w}}}.
 \]
 } leicht auf 0,904 verbessert. \par
 % 2017 / 2018
 Wie zuvor erwähnt, konnte außerdem in der Datensatzrecherche eine Umstellung zu 2018 festgestellt werden, die womöglich auch Prozessänderungen einschließt.
-Daher wurden die beiden Logs in zwei Zeiträume unterteilt, wobei der Startzeitpunkt des Traces ausschlaggebend ist: <2018 und >=2018.
+Daher wurden die beiden Logs in zwei Zeiträume unterteilt, wobei der Startzeitpunkt des Traces ausschlaggebend ist: $<2018$ und $>=2018$.
 In Kombination mit den weggelassenen Trip-Aktivitäten, kann diese Aufteilung in 4 Logs nun einen kombinierten F1-Score von 0,961 erreichen.
 Diese deutliche Verbesserung zeigt, dass durchaus mit der Einbindung der anderen Uni-Fakultäten auch -- zumindest implizit -- Prozessänderungen einhergingen.
 Da bei dem einfachen Process-Mining-Ansatz keine Prozessänderungen berücksichtigt werden, ist die Zusammenfassung zweier verschiedener Abläufe kritisch für die Miner. \par
 % Triple-Split + Trip raus.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/python/heuristicParts}
+    \caption{Gewichtete Ergebnisse des Heuristic-Minders je nach Log-Vorverarbeitung | \texttt{raw}, \texttt{v1}=(International ohne Permits gehen zu Domestic), \texttt{v2}=(International ohne Permits bilden eigenen Log), \texttt{[oT]}=ohne Trips, \texttt{2017/later Split}, \texttt{year\_event}=(Hinzufügen eines extra Events für Silvester 2017/2018))}
+    \label{fig:heuristicparts}
+\end{figure}
 Abschließend wird zudem noch die Problematik hinter fehlenden Permit-Aktivitäten im International Log angegangen.
 Offenbar sind 448 Traces anders strukturiert als die übrigen.
 Mit ihren Dummy-Trips ordnen diese sich mit übriger Declaration+Payment eher in die Kategorie des Domestic-Logs ein.
@@ -145,7 +151,8 @@ Um dies zu überprüfen, wurden diese 448 Traces herausgefiltert und in ein eige
 In zwei Untersuchungen wurde dieses Log einmal dem Domestic-Log hinzugefügt und einmal als eigenständig betrachtet.
 Im Vergleich zum ohne-Trips-F1 von 0,904 konnte der gewichtete F1-Score in der ersten Untersuchung mit Unterteilung Declaration-Only vs. Permit>Declarations nicht gesteigert werden und erreichtete nur noch 0,854 aufgrund eines Abfalls in der Precision.
 Bei der Dreiteilung des Logs wurde ebenfalls mit einem F1 von 0,899 nur ein schwächeres Modell mit dem Heuristic-Miner identifiziert.\par
-Getestet wurde noch die Kombination der Trip-Entfernung mit Zeitsplit und der Dreiteilung des Logs, was in insgesamt einer Logmenge von 6 disjunkten Logs resultierte.
-Diese Kombination erreichte insgesamt das beste gefundene Ergebnis mit einem gewichteten F1 von 0,983 und liegt damit dem einfachen Zeitsplit um 0,22 Prozentpunkte voraus. \par
-Diese Untersuchung zeigt in diesem Fall, dass der Logsplit in der Vorverarbeitung ein mächtigeres Werkzeug für den ersten Schritt ist als die bloße Entfernung unabhängiger Events.
-Die 6 entstandenen Prozessmodelle werden im Anhang unter \todo{Todo anhang} als Petri-Netze dargestellt.
+Getestet wurde noch die Kombination der Trip-Entfernung mit Zeitsplit und der Dreiteilung des Logs, was in insgesamt einer Logmenge von 6 disjunkten Logs resultiert.
+Diese Kombination erreicht mit F1 von 0,956 eine schwächere Leistung als der einfache Zeitsplit ohne Trip-Events und liegt nur gering in der Simplicity und der Log-Fitness vorne.
+Interessanterweise erreichen in dieser Untersuchung die 448 Declaration-Only-Traces trotz eines Anteils von 6,9\% am International-Log keine Verbesserung der Modellgüte, wenn sie dem Domestic-Log hinzugefügt oder einzeln betrachtet werden.
+Trotz anderem Prozessbeginn ohne Permit-Phase, können diese 448 Traces scheinbar die generelle Modellleistung unterstützen, wenn sie im International-Log verbleiben. \par
+Insgesamt verbleibt mit dem einfachen Zeitsplit und der Trip-Entfernung die beste gewichtete Leistung, sodass insgesamt 4 Prozessmodelle identifiziert werden können, welche im Anhang unter \todo{Referenz Anhang} hinterlegt sind.
