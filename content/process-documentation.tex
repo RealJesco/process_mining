@@ -65,40 +65,36 @@ Beschleunigung wiederkehrender Schreibarbeit im Code &
 Vorschläge ohne inhaltliche Tragweite. Jede Übernahme erfolgte bewusst und wurde beim Ausführen der Notebooks mitgeprüft. &
 GitHub Copilot (Code-Completion) in PyCharm \\
 \hline
+Erklärung von Funktionalitäten von Pandas und PM4Py (laufend) &
+Tiefenwissenslücken ergänzen &
+Vorschläge ohne inhaltliche Tragweite. Es ging um Übersicht und Möglichkeiten, um zu prüfen, was nachgebaut werden muss und was bereits besteht. &
+GitHub Copilot (Code-Completion) in PyCharm \\
+\hline
 Umsetzung eigener Entwürfe und Ablaufskizzen in ausführbaren Python-Code (laufend) &
 Werkzeug zur Code-Generierung anhand des eigenen Entwurfs, da das eigene Python-Wissen breit, aber nicht in der nötigen Tiefe vorhanden ist &
 Aufbau, Reihenfolge und inhaltliche Festlegungen stammen von mir, die KI hat sie in Code übersetzt. Vorschläge wurden ausnahmslos als lokaler Git-Diff gesichtet und erst nach eigener Prüfung übernommen. &
 Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
 \hline
-Erzeugung von Skripten zur Prozess- und Rechenüberwachung &
-Rechenintensive Läufe sollten über Nacht unbeaufsichtigt laufen und nach Abbrüchen selbständig neu starten &
-Die Skripte erfüllten ihren Zweck; die Läufe wurden überwacht und wieder angestartet. Rein technisch, ohne Einfluss auf den Inhalt der Arbeit. &
+Umsetzung eigener Entwürfe und Ablaufskizzen in ausführbaren Python-Code (Bsp. 1) &
+Funktionsgenerierung &
+Prompt: Bau mir bitte in dieses Notebook einen simplen Parser für die XES-Dateien unter resources (objektorientiertes Ziel). Cool wäre das in einer SQLite-Datenbank direkt zu speichern, damit ich direkt die strukturiert untersuchen kann zbd das nicht mehrfach machen muss. Ich glaube Events haben immer die gleichen 5 Felder, aber Trace scheint wohl teilweise auch mehr zu haben. Vielleicht macht da dann auch Sinn, die Nicht-Standardfelder in einer Map in einer Spalte AdditionalInfos oder sowas zu hinterlegen. Ein Informationsverlust darf nciht geschehen bei der Transformation zur DB &
+Claude (Anthropic), Haiku 4.5 03.10.26 // 6.8 Credits (GitHub Copilot, Max/1M) \\
+\hline
+Umsetzung eigener Entwürfe und Ablaufskizzen in ausführbaren Python-Code (Bsp. 2) &
+Funktionsgenerierung &
+Prompt: Die Reihenfolge der members ist eigentlich egal: Ich möchte gerne eine Funktion schreiben, die für eine membersliste folgendes macht: Schablonartig übereinander legen und schauen, ob es Übereinstimmungen gibt. Erst basierend auf der Reihenfolge, aber unberücksichtigt eventuell zusätzlicher Wörter zwischen den Wörtern. Das sollte absichern, dass alle "Declaration xy by abc" gefunden werden mit einem Matcher "Declaration % by %" - Unübereinstimmungen sollen mit % gekennzeichnet werden. Für die beiden Payment-Actions kommt dann vermutlich "%Payment%" raus. Egal, kein Overfitting:
+Ich glaube, dafür reicht entweder ein Textmatcher, aaaber es fühlt sich für mich auch noch Process Mining vom Vorgehen an, wo Ähnlichkeiten zweier Logs untersucht werden - vielleicht ist deswegen auch pm4py eine gute Möglichkeit. &
+Claude (Anthropic), Opus 5.5 07.10.26 // 6.8 Credits (GitHub Copilot, Max/1M) \\
+\hline
+Syntaxhilfe und Styling von Diagrammen und technischer Projektstruktur &
+Als Werkzeug zur Lösung von Syntaxproblemen, Inkonsistenzen in meinen Befehlen, aufgetretenden Refactoring-Problemen oder das Anpassen der Ausgabe-Styles von BPMN-Diagrammen oder Tabellen. Außerdem als Hilfe bei Problemen in der Programmumgebung. &
+Aufbau, Reihenfolge und inhaltliche Festlegungen stammen von mir, die KI hat sie in Code übersetzt. Vorschläge wurden ausnahmslos als lokaler Git-Diff gesichtet und erst nach eigener Prüfung übernommen. &
 Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
 \hline
-Umbenennung der Jupyter-Notebooks nach einem einheitlichen Schema &
-Erhöhte Übersicht und Vereinheitlichung der Projektstruktur &
+Umbenennung und Refaktorisierung der Jupyter-Notebooks &
+Erhöhung der Übersicht und Vereinheitlichung der Projektstruktur durch Auslagerung in extra Funktionspackage &
 Rein organisatorische Änderung, das Ergebnis habe ich gegen die Notebook-Reihenfolge geprüft. Ohne Einfluss auf den Inhalt der Arbeit. &
 Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
-\hline
-Durchführung von Git-Merges zwischen den parallel bearbeiteten Ständen &
-Zusammenführung der im Team parallel entstandenen Arbeitsstände &
-Als Werkzeug eingesetzt, die zusammengeführten Stände wurden vor der Übernahme als Diff geprüft. Rein technisch, ohne Einfluss auf den Inhalt. &
-Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
-\hline
-„Bitte mache eine Wahrheitsanalyse zu den Tex-Dokumenten in Verbindung mit den Notebook-Outputs und mache einen Entwurf darüber, wo Zahlen und Aussagen getätigt wurden, die sich auf kein Notebook zurückführen lassen.“ sowie „Bitte finde heraus, wo die Zahl \texttt{<x>} in dieser Aussage ihren Ursprung hat, und durchsuche unter anderem auch die Git-Historie und die Jupyter-Notebook-Outputs.“ (mehrfach) &
-Konsistenzprüfung zwischen Notebooks und LaTeX-Dokumentation. Die Gruppenzusammenarbeit geschah parallel und die gewählten Datenbasen wichen voneinander ab, wodurch Outputs und Textaussagen erneut betrachtet werden mussten. &
-Die Ausgaben dienten als Grundlage für Übersicht und Korrektur-ToDo-Liste. Es wurden keine inhaltlichen Outputs vollständig übernommen; inhaltliche Vorschläge wurden als lokaler Git-Diff immer menschlich geprüft und mit den vorliegenden Notebook-Outputs und Notebook-Reihenfolgen abgeglichen. &
-Claude (Anthropic), Opus 4.8 (GitHub Copilot, Max/1M) \\
-\hline
-„Super, dann haben wir die Zahlen ja geklärt. Kannst du nochmal auf Kap 4 und 5 schauen, was da in den Aussagen nun fehlerhaft oder redundant ist?“ (18.09.2026) &
-Abschließende Konsistenzanalyse der Kapitel 4 und 5, zeitlich im Anschluss an umfangreiche Überarbeitungen in Kapitel 3 &
-Der Output nannte 15 Befunde in sechs Gruppen: falsche oder widersprüchliche Zahlen, im Methodenteil angekündigte, aber nicht eingelöste Auswertungsschritte, ein fehlerhafter Querverweis, mehrfach wiederholte Kennzahlen und Erklärungen, sprachliche Fehler sowie ein reiner Prüfhinweis. Der Output wurde nicht direkt übernommen, sondern als Prüfliste verwendet und Punkt für Punkt durch händische, menschliche Prüfung mit der Ist-Situation in Text und Notebook-Outputs abgeglichen. &
-Claude (Anthropic), Opus 5 (GitHub Copilot, Medium/264K) \\
-\hline
-Überführung dieser Prozessdokumentation von einer geordneten Kommentarstruktur in die Tabellenstruktur (18.09.2026) &
-Vereinheitlichung mit den übrigen Abschnitten, da die eigene Grundlage als semistrukturierter Fließtext vorlag &
-Gliederung und sprachliche Verfeinerung stammen aus dem Modell, die dokumentierten Vorgänge und Bewertungen von mir. Der Entwurf wurde vor der Übernahme gegengelesen. &
-Claude (Anthropic), Opus 5 (GitHub Copilot, Max/1M) \\
 \hline
 \end{longtable}
 \end{landscape}
