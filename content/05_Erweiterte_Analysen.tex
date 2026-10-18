@@ -31,6 +31,16 @@ Mit der Ergänzung dieser Daten könnten je Zeitpunkt die wahren zugrundeliegend
 
 \subsection{Potenziale des maschinellen Lernens}
 \label{sec:ml}
+Zwischen Supervised und Unsupervised Learning besteht der Hauptunterschied darin, dass bei letzterem keine Zielwerte existieren und stattdessen selbstständig Muster erkannt werden müssen.
+Es geht mehr um die Frage der Zuordnung als um die Vorhersage von Werten.
+Hier beim Prozess-Mining über die beiden Logs fiel eine Schwierigkeit häufiger auf: Die Bewertung des Traces als konform oder Sonderfall oder auch die Zuordnung, ob dieser Trace als Abgeschlossen anzusehen ist.\par
+Da diese Werte fehlen, kann ohne Domainwissen keine nachträgliche Klassifizierung und Gültigkeitsanalyse der Traces im Rahmen vom Supervised Learning erfolgen.
+In dieser Disziplin ist daher das Unsupervised Learning zur Clusterbildung und Anomalieerkennung empfehlenswert, wenn tiefgreifende Analysen stattfinden sollen.
+Umgekehrt ist für die Frage, wenn für alle Rejected-Cases ein Ablehnungsgrund anhand case-Attribute gesucht würde, Supervised Learning angebracht.
+Hier bilden die Metadaten des Traces Zielgrößen und die Abläufe die Eingangsgröße, sodass eine Regressionsanalyse z.B. zwischen Kosten und Budgetnumber durchgeführt werden kann.\par
+Es muss hier stark zwischen den genauen Eingangsdaten und der Zielgröße -- und ob diese eben bereits Beispielszuordnungen und Beispielswerte vorweist -- unterschieden werden.
+In der vorangegangenen Analyse wurden diese Vorgehen durch die Einschränkung auf Python und Celonis nicht gesondert betrachtet.
+So sind aber zumindest Ansätze von Unsupervised und Supervised Algorithmen ohne einen iterativen Learning-Ansatz vorhanden und implizit angewandt worden.
 
 % Überwacht: Outcome-orientiertes Predictive Process Monitoring (Ablehnung ja/nein,
 %   lange Durchlaufzeit) aus Präfix + Case-Attributen \parencite{teinemaa_outcome-oriented_2019}
