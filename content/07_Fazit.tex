@@ -36,3 +36,15 @@ Varianten: 99 (Dom.) / 753 (Int.) (Tie-Breaking bei gleichen Zeitstempeln).\newl
 
 \subsection{Fazit und Limitationen}
 \label{sec:zusammenfassung}
+Trotz prozessualer Veränderungen im Zeitverlauf, konnten bereits mit den Rohdaten in Celonis und in Python mögliche Prozessabläufe identifiziert werden, die zu einer starken Abdeckung der Gesamtlogs führen.
+Mit F1-Scores von über 0,9 konnte konsequent bestätigt werden, dass die Prozessmodelle die beobachtbaren Event-Logs abbildeten.
+Mithilfe von Textanalyse und Exact-Cover-Clustering konnten zudem mögliche Objektzentrierungen und Aktivitäten-Clustering stattfinden, was die Interpretation stütze.\par
+Es lässt sich festhalten, dass für inländische (Domestic) Reisen eine Reisekostenabrechnung (Declaration) vorangeht, um die Bezahlung nach einem mehrstufigen Genehmigungsprozess freizugeben.
+Für internationale (International) Reisen wird hingegen auch ein Reiseantragsgenehmigungsprozess (Permit) vorausgesetzt, um die Reisekostenabrechnung loszutreten. Zusätzlich werden im International-Log auch Reminder verschickt im Gesamtprozess und auch die Reisedaten (Trip) erfasst.
+Auffällig ist, dass in dem internationalen Log identische Events mehrfach vorkommen und "wiederverwendet" werden.
+Auch gibt es Fälle, in denen in den Trace-Metadaten -- welche belastbar ausführlicher sind als beim Domestic-Log -- Permit-Metadaten anders befüllt werden und in dieser Abweichung ein Zusammenhang mit International-Traces ohne Reisegenehmigung (Permit) vorliegt.
+In diesen Fällen konnte eine Reisekostenabrechnung (Declaration) ohne Reisegenehmigung (Permit) stattfinden, was auf eine mögliche Prozessabweichung hindeutet und zunächst nicht als konform wirkt in Rücksicht auf den geringen Trace-Anteil.
+\par
+Cash-Flows (Payment) bedingen im Allgemeinen den Abschluss des Genehmigungsprozesses komplett. In beiden Logs finden sich dafür aber auch Gegenbeispiele, bei denen das Payment durchgeführt wurde, bevor eine volle Genehmigung vorlag.
+Im Log waren zudem auch nicht nur konforme positiv abgeschlossene Fälle enthalten, sondern auch 1301 (Domestic) bzw. 1755 (International) abgelehnte Fälle, bei denen im Log keine weitere Bearbeitung erfolgte.
+Bei diesen Traces ist von einer finalen Ablehnung auszugehen. Insgesamt konnte der Grundprozess annähernd präzise abgebildet werden, wobei festgestellt wird, dass weitere Metainformationen zur Prozesshistorie und Organisationen unterstützen würden.
