@@ -36,12 +36,132 @@
     \end{tabular}
 \end{table}
 
-\begin{figure}
-    \centering
-    \includegraphics{figures/python/dom_pn}
-    \caption{Heuristik-Modell des Domestic-Prozesses (PM4Py, F1=0,895, log-fitness=0,925, trace-average-fitness=0,919, simplicity=0,587)}
-    \label{pn:dom_base}
+\section{Python}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\textwidth]{figures/python/dom_pn}
+		\caption{Heuristik-Modell des Domestic-Prozesses (PM4Py, F1=0,895, log-fitness=0,925, trace-average-fitness=0,919, simplicity=0,587)}
+		\label{pn:dom_base}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\textwidth]{figures/python/int_pn}
+		\caption{Heuristik-Modell des International-Prozesses (PM4Py, F1=0,907, log-fitness=0,901, trace-average-fitness=0,896, simplicity=0,500)}
+		\label{pn:int_base}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics{figures/python/domestic_bpmn_entities}
+		\caption{Domestic-Log: Entitäten-Abhängigkeiten im BPMN-Modell mit noise-threshold=1/100}
+		\label{fig:domestic_bpmn_entities}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics{figures/python/international_bpmn_entities}
+		\caption{International-Log: Entitäten-Abhängigkeiten im BPMN-Modell mit noise-threshold=1/100}
+		\label{fig:international_bpmn_entities}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\textwidth]{figures/python/stats_per_log}
+		\caption{F1-Statistik je Teillog je Prozessvariante}
+		\label{fig:stats_per_log}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\textwidth]{figures/python/int_pn_no_trip}
+		\caption{Heuristik-Modell des International-Logs ohne Trip [int\_without\_trips]}
+		\label{fig:int_pn_no_trip}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\textwidth]{figures/python/int_pn_just_decl}
+		\caption{Heuristik-Modell des International-Logs ohne Trips ohne Permit-enthaltenen Logs [int\_decl\_only]}
+		\label{fig:int_pn_just_decl}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\textwidth]{figures/python/int_pn_jw_permit}
+		\caption{Heuristik-Modell des International-Logs ohne Trips mit nur Permit-enthaltenen Logs [int\_permit]}
+		\label{fig:int_pn_jw_permit}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\textwidth]{figures/python/all_decl_wo_trips}
+		\caption{Heuristik-Modell des Domestic-Logs kombiniert mit allen Non-Permit-Logs aus International ohne Trips [all\_decl\_only]}
+		\label{fig:all_decl_wo_trips}
+	\end{figure}
+\subsubsection{Prozess vor 2018}
+Für diese Analyse wurden alle Trip-Aktivitäten entfernt.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/dom_pre2018}
+	\caption{Heuristik-Modell des Domestic-Prozesses vor 2018 [domestic\_before\_2018]}
+	\label{fig:dom_pre2018}
 \end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/int_nt_pre2018}
+	\caption{Heuristik-Modell des International-Logs ohne Trips vor 2018 [int\_without\_trips\_before\_2018]}
+	\label{fig:int_nt_pre2018}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/all_decl_pre2018}
+	\caption{Heuristik-Modell des kombinierten Declaration-Logs vor 2018 [all\_decl\_only\_before\_2018]}
+	\label{fig:all_decl_pre2018}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/int_decl_pre2018}
+	\caption{Heuristik-Modell des International-Logs ohne Trips mit Declaration-Traces vor 2018 [int\_decl\_only\_without\_trips\_before\_2018]}
+	\label{fig:int_decl_pre2018}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/int_permit_pre2018}
+	\caption{Heuristik-Modell des International-Logs ohne Trips mit Permit-Traces vor 2018 [int\_permit\_without\_trips\_before\_2018]}
+	\label{fig:int_permit_pre2018}
+\end{figure}
+
+
+\subsubsection{Prozess ab 2018}
+Für diese Analyse wurden alle Trip-Aktivitäten entfernt.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/dom_post2018}
+	\caption{Heuristik-Modell des Domestic-Prozesses ab 2018 [domestic\_from\_2018]}
+	\label{fig:dom_post2018}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/int_nt_post2018}
+	\caption{Heuristik-Modell des International-Logs ohne Trips ab 2018 [int\_without\_trips\_from\_2018]}
+	\label{fig:int_nt_post2018}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/all_decl_post2018}
+	\caption{Heuristik-Modell des kombinierten Declaration-Logs ab 2018 [all\_decl\_only\_from\_2018]}
+	\label{fig:all_decl_post2018}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/int_decl_post2018}
+	\caption{Heuristik-Modell des International-Logs ohne Trips mit Declaration-Traces ab 2018 [int\_decl\_only\_without\_trips\_from\_2018]}
+	\label{fig:int_decl_post2018}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/python/int_permit_post2018}
+	\caption{Heuristik-Modell des International-Logs ohne Trips mit Permit-Traces ab 2018 [int\_permit\_without\_trips\_from\_2018]}
+	\label{fig:int_permit_post2018}
+\end{figure}
+
+\subsubsection{Vollstatistiken}
+
+\newpage
+\section{Celonis}
 \begin{figure}[htbp]
 	\centering
 	% --- Obere Zeile: BPMN-Referenzmodelle (International) ---
