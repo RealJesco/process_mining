@@ -8,7 +8,7 @@ Dafür werden die Eventnamen zu Wortlisten anhand des Leerzeichens zerlegt und a
 25 Cluster konnten so identifiziert werden, mit Elementanzahlen von 1 bis 34.
 Für die einzelnen Cluster wird ein Pattern automatisiert identifiziert, der alle Elemente des Clusters beschreibt.
 Cluster mit leeren Patterns oder einem 'allMatch'-Ausdruck wurden verworfen, da sie keine inhaltliche Aussagekraft besitzen.
-Mithilfe des 'Algorithmus X' von Donald Knuth \todo{Quelle} wird ein Exact-Cover-Problem der Cluster angegangen und damit Clustermengen identifiziert, bei denen jedes der 37 Events genau einmal eindeutig identifiziert und somit einem Cluster zugeordnet wird.
+Mithilfe des 'Algorithmus X' von Donald Knuth wird ein Exact-Cover-Problem der Cluster angegangen und damit Clustermengen identifiziert, bei denen jedes der 37 Events genau einmal eindeutig identifiziert und somit einem Cluster zugeordnet wird.
 Es entstehen 12 übrige Filterfunktionen, um jedes Event einer eindeutigen Äquivalenzklasse zuzuordnen.
 \begin{wrapfigure}{r}{0.5\textwidth}
     \centering
@@ -47,7 +47,6 @@ Das gefundene Modell (\ref{pn:dom_base}) ist easy-sound, aber nicht sound -- bri
 Im Submitted-Zweig des Modells geht es weiter mit For-Approval, Approved oder Rejected-Events oder direkt zum Final-Approved vom Supervisor.
 Im Falle des Rejects endet der Trace oder er wird zurückgeführt über einen Employee-Rejected-Event - ein Event was im Anschluss an Reject-Events durch konkrete Akteure vermerkt zeitversetzt folgt.
 Wird der Trace nicht abgelehnt, geht es je nach Voraktion weiter an weitere *Approve-Events bis ein Final-Approved-Event erreicht wird, woraufhin der Trace in die Payment-Aktivitäten (Request Payment, dann Payment Handled) übergeht und abschließt.
-%\todo{Abbildung Celonis?}
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/python/domestic_bpmn_declaration}
@@ -55,6 +54,7 @@ Wird der Trace nicht abgelehnt, geht es je nach Voraktion weiter an weitere *App
     \vspace{-0.8cm}
     \label{fig:domestic_bpmn_declaration}
 \end{figure}
+\enquote{For this year’s Business Process Intelligence Challenge, we collected data from the reimbursement process at TU/e. The files contain data from 2017 (only two departments) and 2018 the full TU/e. [...] It’s important to realize that the process described above is the process for 2018. For 2017, there are some differences as this was a pilot year and the process changed slightly on several occasions.}\cite{refStudy}
 Bei Recherche des Datensatzes wurde festgestellt, dass es zu 2018 einen Umschwung in der Datenerhebung gab, insbesondere in den Quellsystemen, weshalb auch Prozesswechsel annehmbar sind, weshalb in Kapitel \ref{sec:prozessfluss_vorverarbeitung} diese Metainformation noch berücksichtigt wird, um die Modellperformance zu verbessern.
 
 % Celonis-Notizen:
@@ -157,7 +157,6 @@ Das Heuristic-PN-Modell läuft für den rohen International-Datensatz auf einen 
 % - International = Domestic-Kern + vorgelagerte Permit-Phase + Trip-Events.
 % - Optional: Inductive-Miner-Modell aus PM4Py (Jesco, figures/python/) gegenüberstellen.
 
-%\todo{Vergleich Domestic vs. International; ggf. PM4Py-Modell von Jesco}
 
 \subsection{Vorverarbeitungen}
 \label{sec:prozessfluss_vorverarbeitung}

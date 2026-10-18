@@ -43,7 +43,7 @@ InternationalDeclarations.xes enthält 6.449 Traces mit insgesamt 72.151 Events,
                                   & 72151 & 23 & 12532 & 59193 & 402 & 1 \\
                 & Eventnamen & 17 & 0 & 12 & 13 & 7 & 0
                              & 34 & 2 & 24 & 29 & 10 & 1 \\
-                & Abläufe\footnote{\todo{Hier Fußnote}} & 99 & 0 & 41 & 77 & 15 & 0
+                & Abläufe\footnote{Die Trace-Abläufe wurden hier anhand der Anteilnahme des Traces am Jahr bestimmt. Ein Trace durfte damit in mehrere Jahre einzählen als Variante. Trips wurden nicht rausgefiltert.} & 99 & 0 & 41 & 77 & 15 & 0
                              & 753 & 3 & 248 & 608 & 75 & 1 \\
             \hline
         \end{tabular}%
@@ -75,14 +75,16 @@ Zudem gibt es in der Vielzahl der Eigenattribute von International semantische �
 'Permit ID' und 'Permit id' unterscheiden sich nur in der Groß-/Kleinschreibung.
 Bei der Betrachtung der enthaltenen Werte, zeigt sich, dass überwiegend diese übereinstimmen, allerdings 448 Fälle existieren, in denen 'Permit id' abweichend von 'Permit ID' den Wert 'travel permit 423' enthält.
 Der Wert 'travel permit 423' ist dabei nicht nur für den Fall relevant, sondern wird auch für einen Trace mit 'Permit ID' = 'travel permit 423' verwendet, wo damit eine Übereinstimmung vorliegt.
-Auf eine mögliche Erklärung dieser 448/449 Fälle wird in Kapitel \todo{Kapitellink} eingegangen. \par
+Auf eine mögliche Erklärung dieser 448/449 Fälle wird in Kapitel \ref{sec:prozessfluss_international} eingegangen. \par
 Auch die Amount-Felder 'Amount' / 'RequestedAmount' / 'AdjustedAmount' / 'OriginalAmount' wurden zusammen untersucht und zusätzlich mit 'Permit RequestedBudget' gegenübergestellt.
 Es konnte festgestellt werden dass in 6448 von 6449 Fällen die ersteren 4 Felder den gleichen Wert enthalten bei 6001 verschiedenen Wertkombinationen, während zu RequestedBudget nur 24 Traces eine Gleichheit gefunden werden konnte, davon 21 Fälle mit dem Amount 0.\par
 'case:Permit travel permit number' und 'case:travel permit number' sind in 5970 Fällen identisch und weichen in 479 Fällen voneinander ab.
 'case:id' und 'case:concept:name' sind in beiden Logs je Trace immer identisch und eindeutig.
 \begin{table}[htbp]
     \centering
+    \vspace{-0.5cm}
     \caption{Attribute und Anzahl distinkter Werte je Log}
+    \vspace{-0.3cm}
     \label{tab:attribut-maechtigkeiten}
     \scriptsize
     \setstretch{1}
@@ -131,22 +133,25 @@ Es konnte festgestellt werden dass in 6448 von 6449 Fällen die ersteren 4 Felde
         \bottomrule
     \end{tabularx}
 \end{table}
+\vspace{-0.4cm}
 
 \subsection{Event-Daten}
+\vspace{-0.3cm}
 \begin{wrapfigure}{r}{0.55\linewidth}
     \centering
+    \vspace{-1.2cm}
+    \caption{Eventverteilung je Log}
     \vspace{-0.3cm}
     \includegraphics[width=0.55\textwidth]{figures/python/eventtypes}
-    \caption{Eventverteilung je Log}
-    \vspace{-2cm}
     \label{fig:eventtypes}
+    \vspace{-0.5cm}
 \end{wrapfigure}
 In beiden Logs enthält ein Event die gleichen 5 Attribute: 'id', 'org:resource', 'concept:name', 'time:timestamp' und 'org:role'.
 'id' und 'time:timestamp' sind Metadaten zu dem betroffenen Event.
-'concept:name' beschreibt die durchgeführte Aktivität.
+'concept:name' beschreibt die durchgeführte Aktivität.\par
 'org:resource' erklärt den Ursprung des Events, ob SYSTEM oder STAFF MEMBER, während 'org:role' die Rolle des Event-Akteurs wiedergibt.
 Jedem möglichen Wert von 'concept:name' ist eine eindeutige Kombination aus 'org:resource' und 'org:role' zugeordnet.
 Bei Domestic sind alle im Log enthaltenen Events in ihrer id eindeutig, während bei International einzelne Events (Kennung über id und time:timestamp) mehrfach vorkommen.
 Dies betrifft 1480 Event-Ids mit insgesamt 4558 Nennungen.
 Eine Abweichung des Timestamps oder des concept:name innerhalb der gleichen Event-Id gibt es bei allen Nennungen in dem Log nicht, weswegen von dem selben Event ausgegangen werden kann.
-Mit einer Differenz von 3078 ($4558-1480$) IDs wird der Unterschied der initialen 72.151 Events (Tabelle \ref{tab:basisstatistik}) zu den 69.073 distinkten Event-Ids in \todo{\ref{tab:attribut-maechtigkeiten}} erklärt.
+Mit einer Differenz von 3078 ($4558-1480$) IDs wird der Unterschied der initialen 72.151 Events (Tabelle \ref{tab:basisstatistik}) zu den 69.073 distinkten Event-Ids in Tabelle \ref{tab:attribut-maechtigkeiten} erklärt.
