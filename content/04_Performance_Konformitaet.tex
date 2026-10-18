@@ -151,11 +151,10 @@ Selbst wenn ein Permit gestellt wird, erfolgt die Genehmigung häufig zu spät. 
 Die Reisegenehmigung verkommt in über vier Fünfteln dieser Fälle von einer präventiven Budgetkontrolle zu einer rein bürokratischen Nachgenehmigung, die nur noch durchlaufen wird, um die Auszahlung im System freizuschalten.
 
 \paragraph{Zusätzliche Eskalationsstufen.}
-In exakt 637 International-Cases (10\,\%) treten die Aktivitäten \texttt{Permit APPROVED by SUPERVISOR} und \texttt{Permit FINAL\_APPROVED by DIRECTOR} auf. Die identische Fallzahl belegt, dass der Supervisor hier nur eine Vorprüfung vornimmt und die Endfreigabe an die Direktoratsebene eskaliert wird. Mit einer mittleren Verzögerung von +52 Tagen stellt diese Eskalationsstufe den größten einzelnen Zeittreiber im gesamten Datensatz dar (\autoref{fig:violations}) \todo{ggf. ergänzen: Ø Amount/Budget bei Director-Cases}.
+In exakt 637 International-Cases (10\,\%) treten die Aktivitäten \texttt{Permit APPROVED by SUPERVISOR} und \texttt{Permit FINAL\_APPROVED by DIRECTOR} auf. Die identische Fallzahl belegt, dass der Supervisor hier nur eine Vorprüfung vornimmt und die Endfreigabe an die Direktoratsebene eskaliert wird. Mit einer mittleren Verzögerung von +52 Tagen stellt diese Eskalationsstufe den größten einzelnen Zeittreiber im gesamten Datensatz dar (\autoref{fig:violations}).
 
 \paragraph{Unprotokollierte Neueinreichungen.}
 Im Domestic-Log folgt in 193 Fällen (2\,\%) auf eine bereits erfolgte Verwaltungsfreigabe (\texttt{Declaration APPROVED by ADMINISTRATION}) unmittelbar ein erneutes \texttt{Declaration SUBMITTED by EMPLOYEE} (+12\,d, +4,9 Schritte), ohne dass dazwischen ein Ablehnungs-Event protokolliert ist. Dies deutet darauf hin, dass Mitarbeitende bereits geprüfte Anträge aktiv zurückziehen oder nachträglich Belege nachreichen können, was den Prüfprozess von vorn anstößt.
-\todo{Jesco: Ergebnis aus Python-Check zu Doppelzahlungen (Payment Handled > 1) in 1--2 Sätzen ergänzen}
 
 \begin{figure}[htbp]
 	\centering
@@ -240,7 +239,3 @@ Unter Berücksichtigung dieser Modellcharakteristik identifiziert Celonis im erw
     \item \textbf{Verzögerte Einreichung:} Deklarationen werden nach Reiseende erst mit erheblichem Verzug (Ø 13 Arbeitstage) eingereicht (\autoref{sec:bottlenecks}).
     \item \textbf{Zusätzliche Eskalations- und Prüfstufen:} Die Einbindung von \texttt{PRE\_APPROVER} und \texttt{DIRECTOR} verlängert die Durchlaufzeit signifikant (bis zu +52\,d) und wird vom frequenzbasierten Modell als Verletzung markiert, stellt fachlich jedoch meist einen regelkonformen Sonderpfad dar.
 \end{enumerate}
-
-\paragraph{Abgleich mit normativem Modell (PM4Py).}
-Um echte Regelverstöße (Muster 1 und 2) trennscharf von legitimen organisatorischen Varianten (Muster 4) abzugrenzen, wurde in PM4Py ergänzend ein fachlich-normatives Referenzmodell definiert und mittels Alignments gegen beide Logs geprüft.
-\todo{Jesco: Alignment-Fitness und Anteil konformer Cases gegen normatives Modell einarbeiten und mit den 81\,\% / 38\,\% aus Celonis vergleichen}
