@@ -48,8 +48,16 @@ Das gefundene Modell (\ref{pn:dom_base}) ist easy-sound, aber nicht sound -- bri
 Im Submitted-Zweig des Modells geht es weiter mit For-Approval, Approved oder Rejected-Events oder direkt zum Final-Approved vom Supervisor.
 Im Falle des Rejects endet der Trace oder er wird zurückgeführt über einen Employee-Rejected-Event - ein Event was im Anschluss an Reject-Events durch konkrete Akteure vermerkt zeitversetzt folgt.
 Wird der Trace nicht abgelehnt, geht es je nach Voraktion weiter an weitere *Approve-Events bis ein Final-Approved-Event erreicht wird, woraufhin der Trace in die Payment-Aktivitäten (Request Payment, dann Payment Handled) übergeht und abschließt.
+%\todo{Abbildung Celonis?}
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/python/domestic_bpmn_declaration}
+    \caption{Domestic-Log: Declaration-Ablauf (noise\_threshold=0)}
+    \vspace{-0.8cm}
+    \label{fig:domestic_bpmn_declaration}
+\end{figure}
 Bei Recherche des Datensatzes wurde festgestellt, dass es zu 2018 einen Umschwung in der Datenerhebung gab, insbesondere in den Quellsystemen, weshalb auch Prozesswechsel annehmbar sind, weshalb in Kapitel \ref{sec:prozessfluss_vorverarbeitung} diese Metainformation noch berücksichtigt wird, um die Modellperformance zu verbessern.
-\todo{Abbildung Celonis?}
+
 % Celonis-Notizen:
 %   Cases: 4618 happy path, 10500 total (43,98 %)
 %   Happy-Path-TPT: 9 d
@@ -62,35 +70,74 @@ Bei Recherche des Datensatzes wurde festgestellt, dass es zu 2018 einen Umschwun
 
 \subsection{International Declarations}
 \label{sec:prozessfluss_international}
-Beim Prozess der International Declarations kommen die Entitäten Permit, Trip und Reminder hinzu, sodass der Prozessfluss umfangreicher wird als bei Domestic.
-\begin{wrapfigure}{r}{0.4\textwidth}
+\begin{wrapfigure}{r}{0.3\textwidth}
     \centering
-    \includegraphics[width=0.4\textwidth]{figures/python/IntClasses}
-    \caption{[Ausschnitt] Entitätsklassenablauf im International-Log (D=Declaration, C=Payment, P=Permit, T=Trip, R=Reminder)}
+    \vspace{-2.4cm}
+    \includegraphics[trim={0 5.1cm 0 0},clip,width=0.3\textwidth]{figures/python/IntClasses}
+    \vspace{-0.8cm}
+    \caption{\small{[Ausschnitt] Int-Entitätenablauf (zus. P=Permit, T=Trip, R=Reminder)}}
     \label{fig:intclasses}
 \end{wrapfigure}
+Beim Prozess der International Declarations kommen die Entitäten Permit, Trip und Reminder hinzu, sodass der Prozessfluss umfangreicher wird als bei Domestic.
 Mit insgesamt 79 verschiedenen Entitätsklassenwechselabläufen fallen bereits 83\% der Traces in die Top 5 Abläufe.
 Auffällig in Abb. \ref{fig:intclasses} ist im Klassenablauf, dass generell die Permit-Phase vor der Declaration-Phase stattfindet, aber auch Abläufe existieren, die ohne Permit-Phase stattfinden.
 In der näheren Untersuchung konnte bestätigt werden, dass es sich bei diesen Abläufen ohne Permit um insgesamt 448 Traces handelt, die ihr Meta-Attribut 'Permit id' abweichend von 'Permit ID' auf 'travel permit 423' gesetzt haben.
 Weiter ist bei diesen 448 Traces zu beobachten, dass die Trip-Aktivitäten timestamp-genau über alle Traces identisch sind, was nicht nur auf eine Dummy-Permit-id, sondern auch auf ein Dummy-Reise-Objekt hindeutet.\par
 Die neu hinzugekommenen Trip-Aktivitäten fallen in ihrer Abfolge ebenfalls auf, jedoch in dem ausbleibenden Muster - Trips bestehen nachweisbar aus einem Start und einem End je Trace, wobei in den Top 5 Varianten klar absehbar ist, dass ein Trip vorangehend, abschließend, mittendrin oder auch durch weitere Bearbeitungen unterbrochen werden kann.
 Es handelt sich daher bei Trips offenbar um eine Entität, die ersichtlich nicht von den übrigen Entitäten abhängig ist, was durchaus zu einer Reiseaktivität passt.
-Die Reiseaktivitäten sind daher nicht zwingend an den Genehmigungsprozessen gebunden und können für manche Analysen 'weggedacht' werden, um den Basisprozess zu bestimmen.
-\begin{wrapfigure}{l}{0.4\textwidth}
-    \centering
-    \includegraphics[width=0.4\textwidth]{figures/python/intClassesNoTrip}
-    \caption{Entitätsklassenablauf im International-Log ohne Trip-Aktivitäten}
-    \label{fig:intclassesnotrip}
-\end{wrapfigure}
+Die Reiseaktivitäten sind daher nicht zwingend an den Genehmigungsprozessen gebunden und können für manche Analysen 'weggedacht' werden, um den Basisprozess zu bestimmen. \par
 Mit diesem Ausblenden reduzieren sich die Klassenwechselabläufe von 79 auf 14 Varianten, wobei die Top 5 Varianten nun 99,06\% der Traces abdecken; mit Platz 1 (5367) Ablauf Permit -> Declaration -> Payment und Platz 2 (426) bereits einen Sonderfall ohne Permit: Declaration -> Payment.
 Leicht ersichtlich wird nun auch die Verwendung des Reminders, der offenbar an der Permit-Phase anschließt (2 Abweichungen).
+\begin{wrapfigure}{r}{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.35\textwidth]{figures/python/intClassesNoTrip}
+    \caption{Entitätsklassenablauf im International-Log ohne Trip-Aktivitäten}
+    \label{fig:intclassesnotrip}
+    \medskip
+    \vspace{0.5cm}
+    \includegraphics[width=0.45\textwidth]{figures/python/international_bpmn_entities_no_trip}
+    \caption{International-Log: Entity-Ablauf ohne Trip (noise\_threshold=0)}
+    \label{fig:intentitynotrip}
+\end{wrapfigure}
 Transparent werden außerdem insgesamt 36 Traces, bei denen es einen Rücksprung zur Permit-Bearbeitung gibt, entweder nach einem Reminder oder nach einer Declaration-Aktivität - mit nur 0,56\% nehmen diese Traces aber eher die Ausnahme-Rolle ein.
 Interessant ist auch wieder die 'Declaration Saved'-Aktion, die 75 mal vorkommt im International-Log, in 73 Fällen schließt diese aber am Reminder bzw. Permit an und bildet das Trace-Ende ohne weitere Events (Trips hier unberücksichtigt).
 Die übrigen 2 Traces teilen sich auf in ein Saved-Event, was von einem letzten Event 'Permit Rejected by Missing' gefolgt wird, während das andere an einer Declaration-Bearbeitung anschließt, welche bereits zwei Reject-Durchläufe hinter sich hat. \par
-Im Vergleich zum Domestic-Log kommt nun mit Director eine zusätzliche org:role hinzu.
-\todo{Ablauf konkret // Auch kurz DUmmy-Ablauf mit Cash}
+Im Vergleich zum Domestic-Log kommt nun mit Director eine org:role hinzu, die ebenfalls Final-approven oder rejecten kann -- zusätzlich zum Supervisor.
+Ein Permit wird nun zunächst von bis zu drei Rollen approved, bis der Director und der Supervisor eingeschaltet wird: Der Administration, dem Budget Owner und dem Pre-Approver, wobei nicht alle Rollen immer involviert sind.
+Auch hier werden generische 'Permit Rejected by Employee'-Events hinzugefügt. Rejections gehen im ersten Schritt hauptsächlich durch Administration und dem Supervisor durchgeführt. Der Supervisor approved oder final-approved und lässt ggf. den Director final-approven. Auffällig ist auch wieder das 'Permit Rejected by Missing'-Event. Ein Send-Reminder kann parallel zum Permit des Final-Approve des Supervisours eintreten. \par
+Im Anschluss an die Permit-Phase geht es weiter mit Declaration, was wie bei Domestic beginnend den Save- oder Submit-Zweig einschlägt.
+Hier geht es ähnlich zum Permit weiter und es werden bis zu Administration+Budget Owner+Pre-Approver involviert, bis der Supervisor und der Director rejecten oder final-approved können.
+Teilweise enden die Traces auch schon ohne Final-Approved, was auf einen nichtkonformen Bearbeitungsabbruch hindeutet.
+Bei den 1Logs mit Dummy-Permit \par
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{\linewidth}
+        \begin{minipage}[c]{0.80\linewidth}
+            \includegraphics[width=\linewidth,trim={0bp 0bp 0bp 20bp},clip]
+                {figures/python/international_bpmn_permit}
+        \end{minipage}\hfill%
+        \begin{minipage}[c]{0.18\linewidth}
+            \caption{Permit + Reminder}
+            \label{fig:intpermit}
+        \end{minipage}
+    \end{subfigure}
+    \par\medskip
+    \begin{subfigure}{\linewidth}
+        \begin{minipage}[c]{0.18\linewidth}
+            \caption{Declaration}
+            \label{fig:intdecl}
+        \end{minipage}\hfill%
+        \begin{minipage}[c]{0.80\linewidth}
+            \includegraphics[width=\linewidth,trim={0bp 0bp 0bp 20bp},clip]
+                {figures/python/international_bpmn_declaration}
+        \end{minipage}
+    \end{subfigure}
+    \caption{International-Log: BPMN-Modelle
+        (\texttt{noise\_threshold=0}).}
+    \label{fig:international_bpmn}
+\end{figure}
 Das Heuristic-PN-Modell läuft für den rohen International-Datensatz auf einen F1-Score von 0,907 und ist ebenfalls easy-sound. Mit einer Simplicity von 0,5 wird eine log-fitness von 0,901 und ein trace-average-fitness von 0,896 erreicht.
-\todo{Abbildung BPMN International (figures/celonis/) und Beschreibung}
+
 % Celonis-Notizen:
 %   Cases: 1369 happy path, 6449 total (21,23 %)
 %   Happy-Path-TPT: 66 d
@@ -113,7 +160,7 @@ Das Heuristic-PN-Modell läuft für den rohen International-Datensatz auf einen 
 
 %\todo{Vergleich Domestic vs. International; ggf. PM4Py-Modell von Jesco}
 
-\subsection{Vorverarbeitungen durch Meta-Daten}
+\subsection{Vorverarbeitungen}
 \label{sec:prozessfluss_vorverarbeitung}
 % Trip raus
 Die Trip-Aktivitäten sind im International-Log der Beobachtung nach, nicht an die übrige Prozesskette gebunden.
@@ -141,7 +188,7 @@ Da bei dem einfachen Process-Mining-Ansatz keine Prozessänderungen berücksicht
 % Triple-Split + Trip raus.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{figures/python/heuristicParts}
+    \includegraphics[width=\textwidth]{figures/python/heuristicPartitions}
     \caption{Gewichtete Ergebnisse des Heuristic-Minders je nach Log-Vorverarbeitung | \texttt{raw}, \texttt{v1}=(International ohne Permits gehen zu Domestic), \texttt{v2}=(International ohne Permits bilden eigenen Log), \texttt{[oT]}=ohne Trips, \texttt{2017/later Split}, \texttt{year\_event}=(Hinzufügen eines extra Events für Silvester 2017/2018))}
     \label{fig:heuristicparts}
 \end{figure}
@@ -150,10 +197,11 @@ Offenbar sind 448 Traces anders strukturiert als die übrigen.
 Mit ihren Dummy-Trips ordnen diese sich mit übriger Declaration+Payment eher in die Kategorie des Domestic-Logs ein.
 Um dies zu überprüfen, wurden diese 448 Traces herausgefiltert und in ein eigenes Log isoliert.
 In zwei Untersuchungen wurde dieses Log einmal dem Domestic-Log hinzugefügt und einmal als eigenständig betrachtet.
-Im Vergleich zum ohne-Trips-F1 von 0,904 konnte der gewichtete F1-Score in der ersten Untersuchung mit Unterteilung Declaration-Only vs. Permit>Declarations nicht gesteigert werden und erreichtete nur noch 0,854 aufgrund eines Abfalls in der Precision.
-Bei der Dreiteilung des Logs wurde ebenfalls mit einem F1 von 0,899 nur ein schwächeres Modell mit dem Heuristic-Miner identifiziert.\par
-Getestet wurde noch die Kombination der Trip-Entfernung mit Zeitsplit und der Dreiteilung des Logs, was in insgesamt einer Logmenge von 6 disjunkten Logs resultiert.
-Diese Kombination erreicht mit F1 von 0,956 eine schwächere Leistung als der einfache Zeitsplit ohne Trip-Events und liegt nur gering in der Simplicity und der Log-Fitness vorne.
-Interessanterweise erreichen in dieser Untersuchung die 448 Declaration-Only-Traces trotz eines Anteils von 6,9\% am International-Log keine Verbesserung der Modellgüte, wenn sie dem Domestic-Log hinzugefügt oder einzeln betrachtet werden.
-Trotz anderem Prozessbeginn ohne Permit-Phase, können diese 448 Traces scheinbar die generelle Modellleistung unterstützen, wenn sie im International-Log verbleiben. \par
-Insgesamt verbleibt mit dem einfachen Zeitsplit und der Trip-Entfernung die beste gewichtete Leistung, sodass insgesamt 4 Prozessmodelle identifiziert werden können, welche im Anhang unter \todo{Referenz Anhang} hinterlegt sind.
+Im Vergleich zum ohne-Trips-F1 von 0,904 konnte der gewichtete F1-Score in der ersten Untersuchung mit Unterteilung Declaration-Only vs. Permit>Declarations nicht gesteigert werden und erreichtete nur noch 0,899 aufgrund eines Abfalls in der Precision.
+Bei der Dreiteilung des Logs wurde ebenfalls mit einem F1 von 0,900 nur ein schwächeres Modell mit dem Heuristic-Miner identifiziert.\par
+Getestet wurde zudem noch die Kombination der drei Vorverarbeitungsschritte mit Einschränkung auf ohne-Trips.
+So verbleiben Tests, bei denen die 448 Declaration-Only-Traces dem Domestic-Log hinzugefügt werden, oder als eigener Log behandelt wird, sodass mir dem Zeitsplit einmal 4 bzw. 6 Logs entstehen.
+Die erste Kombination erreicht mit F1 von 0,960 eine leicht schwächere Leistung als der einfache Zeitsplit ohne Trip-Events und liegt nur gering in der Log-Fitness vorne.
+In der Variante mit 6 Logs wird wieder ein F1 von 0,961 erreicht, jedoch auch die Generalisierung und Simplicity erhöht.
+Interessanterweise erreichen in dieser Untersuchung die 448 Declaration-Only-Traces trotz eines Anteils von 6,9\% am International-Log keine deutliche Verbesserung der Modellgüte, wenn sie dem Domestic-Log hinzugefügt oder einzeln betrachtet werden.
+Insgesamt verbleibt mit dem einfachen Zeitsplit und der Trip-Entfernung die effektivste Vorverarbeitung und die 448 Dummy-enthaltenen Traces müssen nicht zwangsweise einzeln betrachtet werden.
