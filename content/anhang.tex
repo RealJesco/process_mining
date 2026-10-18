@@ -47,3 +47,83 @@
 	\caption{Einfluss des Referenzmodells auf die gemessene Konformität im International-Log (links: nur Variante 1 mit 0\,\% Konformität bis Ende 2017; rechts: erweitertes Modell inkl.\ optionaler Administration und Budget Owner)}
 	\label{fig:conformance_comparison_int}
 \end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/celonis/view_compare_dec.png}
+	\caption{Direkter Durchlaufzeit-Vergleich des identischen Abrechnungsabschnitts (\texttt{Declaration SUBMITTED by EMPLOYEE} bis \texttt{Payment Handled}) zwischen Domestic (links, Ø 11,6\,d) und International (rechts, Ø 14,6\,d)}
+    \label{fig:view_compare_dec}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/view_variants_dom.png}
+		\caption{Variant Explorer Domestic (Top-3 = 81\,\%, Variante 8 mit 0\,ms)}
+		\label{fig:view_variants_dom}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/view_variants_int.png}
+		\caption{Variant Explorer International (Top-3 = 36\,\% von 756 Varianten)}
+		\label{fig:view_variants_int}
+	\end{subfigure}
+	\caption{Manuell erstellte Celonis-Views zur Variantenanalyse}
+	\label{fig:view_variants}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/view_rejections_dom.png}
+		\caption{Rejections Domestic (gefiltert auf 1.301 abgelehnte Cases; 975 davon erreichen dennoch \texttt{Payment Handled})}
+		\label{fig:view_rejections_dom}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/view_rejections_int.png}
+		\caption{Rejections International (1.755 abgelehnte Cases = 27\,\%, aufgeteilt nach Declaration und Permit)}
+		\label{fig:view_rejections_int}
+	\end{subfigure}
+	\caption{Manuell erstellte Celonis-Dashboards zur Analyse der Ablehnungen und Korrekturschleifen}
+	\label{fig:view_rejections}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/case_f954_explorer.png}
+		\caption{Case Explorer: 9 Monate Liegezeit zwischen Einreichung (12/2017) und Admin-Ablehnung (08/2018)}
+		\label{fig:case_f954_explorer}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/celonis/case_f954_flow.png}
+		\caption{Prozessfluss des Einzelfalls mit Korrekturschleife über \texttt{Declaration REJECTED by EMPLOYEE}}
+		\label{fig:case_f954_flow}
+	\end{subfigure}
+	\caption{Einzelfallanalyse des Langläufers \texttt{f954cbea-975d-4cf4-a1f6-a400d81f0d9f} (283 Tage Durchlaufzeit) im Celonis-View}
+	\label{fig:case_f954}
+\end{figure}
+
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{0.49\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/datenmodellDom.png}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.49\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/datenmodellInt.png}
+\end{subfigure}
+\caption{Datenmodell nach dem XES-Import: Es liegt ausschließlich die Aktivitätstabelle vor, eine Case-Tabelle fehlt.}
+\label{fig:anhang-datenmodell}
+\end{figure}
