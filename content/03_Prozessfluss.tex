@@ -19,9 +19,9 @@ Es entstehen 12 übrige Filterfunktionen, um jedes Event einer eindeutigen Äqui
 \end{wrapfigure}
 Die inhaltliche Bedeutung dieser Relationen wird mit Domänenwissen menschlich interpretiert, sodass Relationen mit Zusammenfassungen durch 'contains-By'-Pattern oder durch das Mischen von Aktivitäten und deren Kontext (z.B. 'Start' und 'Permit' in der gleichen Filterfunktion) entfernt werden, da sie Bedeutungsbereiche vermischen.
 Übrig bleiben 2 Filterfunktionen, die Eventnamen inhaltlich einteilen und die Interpretierung von Prozessen unterstützen:
-\begin{itemize}
-    \item Filterfunktion 'entity\_classes': [DECLARATION, PERMIT, PAYMENT, TRIP, REMINDER SEND]
-    \item Filterfunktion 'activity\_classes': [REJECTED, APPROVED, FINAL\_APPROVED, FOR\_APPROVAL, SUBMITTED, END, HANDLED, REMINDER SEND, REQUEST, SAVED, START]
+\begin{itemize}[leftmargin=1em, label=$\circ$]
+    \item $f_1$ \texttt{entity\_classes}: [DECLARATION, PERMIT, PAYMENT, TRIP, REMINDER SEND]
+    \item $f_2$ \texttt{activity\_classes}: [REJECTED, APPROVED, FINAL\_APPROVED, FOR\_APPROVAL, SUBMITTED, END, HANDLED, REMINDER SEND, REQUEST, SAVED, START]
 \end{itemize}
 % Umfang: 2-3 Seiten
 % Assignment-Frage 1: Describe and visualize the general underlying process flow.
@@ -32,15 +32,24 @@ Die inhaltliche Bedeutung dieser Relationen wird mit Domänenwissen menschlich i
 
 \subsection{Domestic Declarations}
 \label{sec:prozessfluss_domestic}
-Bereits absehbar an Abb. \ref{fig:filters} ist, dass im Domestic-Log die Eventgruppen 'Permit', 'Trip' und 'Reminder Send' nicht vorkommen, sodass die Prozessidentifikation sich auf Declaration- und Payment-Aktivitäten konzentrieren kann.
-\begin{wrapfigure}{r}{0.55\textwidth}
+Bereits absehbar an Abb. \ref{fig:filters} ist, dass im Domestic-Log die Eventgruppen 'Permit', 'Trip' und 'Reminder Send' nicht vorkommen, sodass die Prozessidentifikation sich auf Declaration- und Payment-Aktivitäten konzentrieren kann.\par
+\begin{wrapfigure}{r}{0.35\textwidth}
     \centering
-    \includegraphics[width=0.55\textwidth]{figures/python/DomesticClasses}
+    \vspace{-1cm}
+    \includegraphics[width=0.35\textwidth]{figures/python/DomesticClasses}
     \caption{Entitätsklassenablauf im Domestic-Log (D=Declaration, C=Payment)}
     \label{fig:domesticclasses}
 \end{wrapfigure}
-Mithilfe der Filterfunktion 'entity\_classes' und Beschränkungen auf Klassenwechseln wird ersichtlich, dass die Payment-Aktivitäten im Domestic-Log immer gebündelt und nie zu Beginn stattfinden (s. Abb. \ref{fig:domesticclasses}) - in nur 4 der 10500 Fälle wird eine Declaration-Aktion noch erneut nach dem Payment durchgeführt.
-
+Mithilfe der Filterfunktion 'entity\_classes' und Beschränkungen auf Klassenwechseln wird ersichtlich, dass die Payment-Aktivitäten im Domestic-Log immer gebündelt und nie zu Beginn stattfinden (s. Abb. \ref{fig:domesticclasses}) - in nur 4 der 10500 Fälle wird eine Declaration-Aktion noch erneut nach dem Payment durchgeführt, in 453 Fällen bleibt ein Cashflow aus.
+In 135 Fällen beginnt der Prozess mit einer Declaration-Submitted Aktivität
+Überwiegend beginnen die Traces mit einer Declaration-Submitted (Employee) Aktivität; nur in 135 Fällen wird stattdessen mit einem Declaration-Saved (Employee) begonnen, wovon 134 auch keine weiteren Aktivitäten enthalten - der übrige Trace enthält die Saved-Aktion, gefolgt von Request Payment und Payment Handled.
+Mit PM4Py wurden verschiedenste Process-Discovery-Algorithmen\footnote{Getestet wurde: Induktiv-PN (Petrinetz), Alpha-PN, AlphaPlus-PN, Heuristic-PN, Induktiv-BPMN mit Rücktransformation zum PN, Induktiv-PN mit 1/10 und 1/20 noise-threshold, ILP-PN (alpha=0.9) und POWL (Partially Ordered Workflow Language). Wo nicht weiter angegeben, wurden konsequent die Defaultwerte von PM4Py verwendet.} getestet, bei der konsequent der Heuristik-basierte Miner die besten Ergebnisse nach den gewählten Metriken erreichte, was in einem Domestic-Petrinetzmodell mit F1-Score von 0,895 resultierte.
+Das gefundene Modell (\ref{pn:dom_base}) ist easy-sound, aber nicht sound -- bringt damit nicht jeden Trace zum konformen Abschluss -- und verfügt bei einer Simplicity von 0,587 log-fitness von 0,925 und trace-average-fitness von 0,919.
+Im Submitted-Zweig des Modells geht es weiter mit For-Approval, Approved oder Rejected-Events oder direkt zum Final-Approved vom Supervisor.
+Im Falle des Rejects endet der Trace oder er wird zurückgeführt über einen Employee-Rejected-Event - ein Event was im Anschluss an Reject-Events durch konkrete Akteure vermerkt zeitversetzt folgt.
+Wird der Trace nicht abgelehnt, geht es je nach Voraktion weiter an weitere *Approve-Events bis ein Final-Approved-Event erreicht wird, woraufhin der Trace in die Payment-Aktivitäten (Request Payment, dann Payment Handled) übergeht und abschließt.
+Bei Recherche des Datensatzes wurde festgestellt, dass es zu 2018 einen Umschwung in der Datenerhebung gab, insbesondere in den Quellsystemen, weshalb auch Prozesswechsel annehmbar sind, weshalb in Kapitel \ref{sec:prozessfluss_vorverarbeitung} diese Metainformation noch berücksichtigt wird, um die Modellperformance zu verbessern.
+\todo{Abbildung Celonis?}
 % Celonis-Notizen:
 %   Cases: 4618 happy path, 10500 total (43,98 %)
 %   Happy-Path-TPT: 9 d
@@ -51,11 +60,36 @@ Mithilfe der Filterfunktion 'entity\_classes' und Beschränkungen auf Klassenwec
 % Abbildung: BPMN-Export aus Celonis (resources/CelonisDomesticDeclarations.bpmn
 %            -> als PDF/PNG nach figures/celonis/ exportieren)
 
-\todo{Abbildung BPMN Domestic (figures/celonis/) und Beschreibung}
-
 \subsection{International Declarations}
 \label{sec:prozessfluss_international}
-
+Beim Prozess der International Declarations kommen die Entitäten Permit, Trip und Reminder hinzu, sodass der Prozessfluss umfangreicher wird als bei Domestic.
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/python/IntClasses}
+    \caption{[Ausschnitt] Entitätsklassenablauf im International-Log (D=Declaration, C=Payment, P=Permit, T=Trip, R=Reminder)}
+    \label{fig:intclasses}
+\end{wrapfigure}
+Mit insgesamt 79 verschiedenen Entitätsklassenwechselabläufen fallen bereits 83\% der Traces in die Top 5 Abläufe.
+Auffällig in Abb. \ref{fig:intclasses} ist im Klassenablauf, dass generell die Permit-Phase vor der Declaration-Phase stattfindet, aber auch Abläufe existieren, die ohne Permit-Phase stattfinden.
+In der näheren Untersuchung konnte bestätigt werden, dass es sich bei diesen Abläufen ohne Permit um insgesamt 448 Traces handelt, die ihr Meta-Attribut 'Permit id' abweichend von 'Permit ID' auf 'travel permit 423' gesetzt haben.
+Weiter ist bei diesen 448 Traces zu beobachten, dass die Trip-Aktivitäten timestamp-genau über alle Traces identisch sind, was nicht nur auf eine Dummy-Permit-id, sondern auch auf ein Dummy-Reise-Objekt hindeutet.\par
+Die neu hinzugekommenen Trip-Aktivitäten fallen in ihrer Abfolge ebenfalls auf, jedoch in dem ausbleibenden Muster - Trips bestehen nachweisbar aus einem Start und einem End je Trace, wobei in den Top 5 Varianten klar absehbar ist, dass ein Trip vorangehend, abschließend, mittendrin oder auch durch weitere Bearbeitungen unterbrochen werden kann.
+Es handelt sich daher bei Trips offenbar um eine Entität, die ersichtlich nicht von den übrigen Entitäten abhängig ist, was durchaus zu einer Reiseaktivität passt.
+Die Reiseaktivitäten sind daher nicht zwingend an den Genehmigungsprozessen gebunden und können für manche Analysen 'weggedacht' werden, um den Basisprozess zu bestimmen.
+\begin{wrapfigure}{l}{0.4\textwidth}
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/python/intClassesNoTrip}
+    \caption{Entitätsklassenablauf im International-Log ohne Trip-Aktivitäten}
+    \label{fig:intclassesnotrip}
+\end{wrapfigure}
+Mit diesem Ausblenden reduzieren sich die Klassenwechselabläufe von 79 auf 14 Varianten, wobei die Top 5 Varianten nun 99,06\% der Traces abdecken; mit Platz 1 (5367) Ablauf Permit -> Declaration -> Payment und Platz 2 (426) bereits einen Sonderfall ohne Permit: Declaration -> Payment.
+Leicht ersichtlich wird nun auch die Verwendung des Reminders, der offenbar an der Permit-Phase anschließt (2 Abweichungen).
+Transparent werden außerdem insgesamt 36 Traces, bei denen es einen Rücksprung zur Permit-Bearbeitung gibt, entweder nach einem Reminder oder nach einer Declaration-Aktivität - mit nur 0,56\% nehmen diese Traces aber eher die Ausnahme-Rolle ein.
+Interessant ist auch wieder die 'Declaration Saved'-Aktion, die 75 mal vorkommt im International-Log, in 73 Fällen schließt diese aber am Reminder bzw. Permit an und bildet das Trace-Ende ohne weitere Events (Trips hier unberücksichtigt).
+Die übrigen 2 Traces teilen sich auf in ein Saved-Event, was von einem letzten Event 'Permit Rejected by Missing' gefolgt wird, während das andere an einer Declaration-Bearbeitung anschließt, welche bereits zwei Reject-Durchläufe hinter sich hat.
+\todo{Ablauf konkret // Auch kurz DUmmy-Ablauf mit Cash}
+Das Heuristic-PN-Modell läuft für den rohen International-Datensatz auf einen F1-Score von 0,907 und ist ebenfalls easy-sound. Mit einer Simplicity von 0,5 wird eine log-fitness von 0,901 und ein trace-average-fitness von 0,896 erreicht.
+\todo{Abbildung BPMN International (figures/celonis/) und Beschreibung}
 % Celonis-Notizen:
 %   Cases: 1369 happy path, 6449 total (21,23 %)
 %   Happy-Path-TPT: 66 d
@@ -67,14 +101,38 @@ Mithilfe der Filterfunktion 'entity\_classes' und Beschränkungen auf Klassenwec
 %   Varianten: 756
 % Abbildung: BPMN-Export aus Celonis (resources/CelonisInternationalDeclarations.bpmn)
 
-\todo{Abbildung BPMN International (figures/celonis/) und Beschreibung}
 
-\subsection{Abstraktionsniveau und Vergleich}
-\label{sec:prozessfluss_vergleich}
+%\subsection{Abstraktionsniveau und Vergleich}
+%\label{sec:prozessfluss_vergleich}
 
 % - Abstraktion begründen: Varianten-Abdeckung (Top-n-Varianten = x % der Cases),
 %   Frequenzfilter im Process Explorer.
 % - International = Domestic-Kern + vorgelagerte Permit-Phase + Trip-Events.
 % - Optional: Inductive-Miner-Modell aus PM4Py (Jesco, figures/python/) gegenüberstellen.
 
-\todo{Vergleich Domestic vs. International; ggf. PM4Py-Modell von Jesco}
+%\todo{Vergleich Domestic vs. International; ggf. PM4Py-Modell von Jesco}
+
+\subsection{Vorverarbeitungen durch Meta-Daten}
+\label{sec:prozessfluss_vorverarbeitung}
+% Trip raus
+Die Trip-Aktivitäten sind im International-Log der Beobachtung nach, nicht an die übrige Prozesskette gebunden.
+Da keine Inkonsistenzen existieren in dem isolierten Trip-Teil, läuft dieser Zweig daher unabhängig, weshalb eine Berücksichtigung in den Process-Minern nur die Bestimmungen erschweren würde.
+Daher wurde mit PM4Py noch eine weitere Analyse gestartet, bei der die Trip-Aktivitäten entfernt werden, wodurch sich der kombinierte F1-Score auf den rohen Logs beim Heuristic-Miner von 0,902 \footnote{\todo{Berechnung erklären}} leicht auf 0,904 verbessert. \par
+% 2017 / 2018
+Wie zuvor erwähnt, konnte außerdem in der Datensatzrecherche eine Umstellung zu 2018 festgestellt werden, die womöglich auch Prozessänderungen einschließt.
+Daher wurden die beiden Logs in zwei Zeiträume unterteilt, wobei der Startzeitpunkt des Traces ausschlaggebend ist: <2018 und >=2018.
+In Kombination mit den weggelassenen Trip-Aktivitäten, kann diese Aufteilung in 4 Logs nun einen kombinierten F1-Score von 0,961 erreichen.
+Diese deutliche Verbesserung zeigt, dass durchaus mit der Einbindung der anderen Uni-Fakultäten auch -- zumindest implizit -- Prozessänderungen einhergingen.
+Da bei dem einfachen Process-Mining-Ansatz keine Prozessänderungen berücksichtigt werden, ist die Zusammenfassung zweier verschiedener Abläufe kritisch für die Miner. \par
+% Triple-Split + Trip raus.
+Abschließend wird zudem noch die Problematik hinter fehlenden Permit-Aktivitäten im International Log angegangen.
+Offenbar sind 448 Traces anders strukturiert als die übrigen.
+Mit ihren Dummy-Trips ordnen diese sich mit übriger Declaration+Payment eher in die Kategorie des Domestic-Logs ein.
+Um dies zu überprüfen, wurden diese 448 Traces herausgefiltert und in ein eigenes Log isoliert.
+In zwei Untersuchungen wurde dieses Log einmal dem Domestic-Log hinzugefügt und einmal als eigenständig betrachtet.
+Im Vergleich zum ohne-Trips-F1 von 0,904 konnte der gewichtete F1-Score in der ersten Untersuchung mit Unterteilung Declaration-Only vs. Permit>Declarations nicht gesteigert werden und erreichtete nur noch 0,854 aufgrund eines Abfalls in der Precision.
+Bei der Dreiteilung des Logs wurde ebenfalls mit einem F1 von 0,899 nur ein schwächeres Modell mit dem Heuristic-Miner identifiziert.\par
+Getestet wurde noch die Kombination der Trip-Entfernung mit Zeitsplit und der Dreiteilung des Logs, was in insgesamt einer Logmenge von 6 disjunkten Logs resultierte.
+Diese Kombination erreichte insgesamt das beste gefundene Ergebnis mit einem gewichteten F1 von 0,983 und liegt damit dem einfachen Zeitsplit um 0,22 Prozentpunkte voraus. \par
+Diese Untersuchung zeigt in diesem Fall, dass der Logsplit in der Vorverarbeitung ein mächtigeres Werkzeug für den ersten Schritt ist als die bloße Entfernung unabhängiger Events.
+Die 6 entstandenen Prozessmodelle werden im Anhang unter \todo{Todo anhang} als Petri-Netze dargestellt.
