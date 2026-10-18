@@ -1,24 +1,41 @@
-\section{Handlungsempfehlungen und Fazit}
+\section{Handlungsempfehlungen, Tool-Vergleich und Fazit}
 \label{sec:fazit}
 
-% Umfang: 1-2 Seiten
-% Assignment-Frage 11: Make specific recommendations for improving the processes.
-
-\subsection{Handlungsempfehlungen \& Toolvergleich}
+\subsection{Handlungsempfehlungen \& Tool-Vergleich}
 \label{sec:empfehlungen}
 
-% 1. Frist/Reminder zur Einreichung nach Reiseende (End trip -> Submit: 13 AT)
-% 2. Systemsperre: kein Trip / keine Deklaration ohne genehmigtes Permit (748 Cases)
-% 3. Plausibilitätsprüfung vor dem Absenden -> weniger Admin-Rejections und Rework
-% 4. Zahlungsphase automatisieren/bündeln (3 + 4 AT)
-% 5. Ablehnungsgründe und Ressourcen strukturiert loggen
+\subsection{Tool-Vergleich: Celonis vs.\ Python (PM4Py)}
+\label{sec:toolvergleich}
 
-\todo{Handlungsempfehlungen}
+Die parallele Untersuchung mit der kommerziellen Plattform Celonis \parencite{vogelgesang_celonis_2022} und der Open-Source-Bibliothek PM4Py \parencite{berti_process_2019} zeigt, dass sich beide Werkzeuge komplementär ergänzen, in der Datenverarbeitung und bei einzelnen Kennzahlen jedoch methodisch bedingte Abweichungen aufweisen (\autoref{tab:toolvergleich}).
 
-\subsection{Fazit}
+\begin{table}[htbp]
+\centering
+\caption{Systematischer Vergleich von Celonis und Python (PM4Py) im Analyseprozess}
+\label{tab:toolvergleich}
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{@{}p{2.9cm} X X@{}}
+\toprule
+\textbf{Dimension} & \textbf{Celonis (Process Analytics \& PQL)} & \textbf{Python (PM4Py)} \\
+\midrule
+\textbf{Datenimport \& Attribute} &
+Direkter XES-Import erzeugt nur eine Aktivitätstabelle; Trace-Attribute (\texttt{Amount}, \texttt{Permit ID}) fehlen ohne vorherige CSV-Konvertierung. &
+Voller Zugriff auf alle Trace- und Event-Attribute; deckt 448 Dummy-Permits (\texttt{travel permit 423}) und 3.078 redundante Event-IDs auf. \\
+\textbf{Exploration \& Vorverarbeitung} &
+Sehr schnelle, interaktive Filterung über Varianten, Zeiträume und Einzelfälle (\textit{Case Explorer}); PQL erlaubt flexible KPI-Dashboards. &
+Hohe algorithmische Freiheit: Text-Clustering der 37 Eventnamen (Exact Cover / Algorithmus X), Entfernen der Trip-Events und Zeitsplits. \\
+\textbf{Process Discovery \& Conformance} &
+Frequenzbasierter Process Explorer und BPMN-Abgleich (Variante 1 vs.\ Top-3 mit XOR); visualisiert den Strukturbruch 2018 unmittelbar. &
+Systematisches Benchmarking vieler Miner (Heuristic, Inductive, ILP); exakte Fitness-, Precision- und F1-Berechnung (Anstieg von 0,902 auf 0,961). \\
+\textbf{Ergebnisvergleich (Kennzahlen)} &
+Varianten: 100 (Dom.) / 756 (Int.).\newline
+Ø Durchlaufzeit Int.: weist je nach View 66\,d (Happy Path), 75\,d (getrimmt) oder 86\,d (alle Cases) aus. &
+Varianten: 99 (Dom.) / 753 (Int.) (Tie-Breaking bei gleichen Zeitstempeln).\newline
+Ø Durchlaufzeit Int.: 86\,d auf Rohdaten. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Fazit und Limitationen}
 \label{sec:zusammenfassung}
-
-% Kurze Zusammenfassung der wichtigsten Erkenntnisse + Limitationen
-% (Zeitraum/Scope 2017 vs. 2018, Anonymisierung, Hypothesen).
-
-\todo{Fazit}
