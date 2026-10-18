@@ -32,9 +32,38 @@
 \subsection{Key Performance Indicators}
 \label{sec:kpis}
 
-% Definition + PQL-Formel + Werte Domestic/International \parencite{dumas_fundamentals_2018,vogelgesang_celonis_2022}
-% Vorschläge: Median-Durchlaufzeit, First-Time-Right-Quote, Rework-Quote,
-%             Permit-Compliance, Einreichungsverzug nach Reise, Zahlungsdauer
-% Dashboard-Screenshots nach figures/celonis/
+Um die in \autoref{sec:performance} aufgedeckten Schwachstellen – lange Liegezeiten, häufige Korrekturschleifen und umgangene Reisegenehmigungen – kontinuierlich zu steuern, empfiehlt sich ein Kennzahlensystem entlang der Dimensionen Zeit, Qualität und Compliance \parencite{dumas_fundamentals_2018}. \autoref{tab:kpis} fasst sechs zentrale Key Performance Indicators (KPIs) mit ihrer fachlichen Definition und den empirischen Ist-Werten zusammen.
 
-\todo{KPIs mit PQL (Eziz)}
+\begin{table}[htbp]
+\centering
+\caption{Empfohlene Prozess-KPIs zur Steuerung des Reisekostenprozesses}
+\label{tab:kpis}
+\footnotesize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}p{3.2cm} X c c@{}}
+\toprule
+\textbf{KPI (Dimension)} & \textbf{Fachliche Definition und Steuerungsziel} & \textbf{Dom.} & \textbf{Int.} \\
+\midrule
+\textbf{Median-Abrechnungsdauer} \textit{(Zeit)} &
+Mittlere Dauer (Median) von der ersten Einreichung der Deklaration bis zur Auszahlung; robust gegenüber extremen Ausreißern. &
+7,4\,d & 10,2\,d \\
+\textbf{Einreichungsverzug} \textit{(Zeit)} &
+Durchschnittliche Arbeitstage zwischen Reiseende (\texttt{End trip}) und Einreichung der Abrechnung durch die Mitarbeitenden. &
+-- & 13,0\,AT \\
+\textbf{Zahlungsdauer} \textit{(Zeit)} &
+Systemseitige Durchlaufzeit von der finalen Vorgesetztenfreigabe (\texttt{FINAL\_APPROVED}) bis zur Auszahlung (\texttt{Payment Handled}). &
+7,0\,AT & 5,0\,AT \\
+\textbf{First-Time-Right-Quote} \textit{(Qualität)} &
+Anteil der Anträge, die den gesamten Prüfprozess ohne eine einzige Zurückweisung durchlaufen. &
+88\,\% & 73\,\% \\
+\textbf{Rework-Quote} \textit{(Qualität)} &
+Anteil der Fälle mit Mehrfacheinreichungen (\texttt{Declaration SUBMITTED} $> 1$) infolge von Korrekturschleifen. &
+7\,\% & 19\,\% \\
+\textbf{Permit-Compliance} \textit{(Compliance)} &
+Anteil der Auslandsreisen, bei denen die finale Reisegenehmigung regelkonform \emph{vor} Reiseantritt (\texttt{Start trip}) vorliegt. &
+-- & $\approx 76\,\%$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Auf der Zeitebene trennen diese KPIs die Gesamtprozessdauer in klar abgrenzbare Verantwortungsbereiche: Während der \emph{Einreichungsverzug} das Verhalten der Reisenden nach Rückkehr misst, überwacht die \emph{Zahlungsdauer} die technische Batch-Verarbeitung in der Finanzabteilung. Auf Qualitätsebene zeigen die \emph{First-Time-Right-} und die \emph{Rework-Quote} unmittelbar auf
