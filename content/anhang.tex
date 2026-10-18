@@ -168,6 +168,7 @@ die Datei \texttt{vollstatistik\_combined.csv} die zusammengefassten
 Statistiken der untersuchten Prozessaufteilungen.
 
 \newpage
+\section{Celonis}
 \begin{figure}[htbp]
 	\centering
 	% --- Obere Zeile: BPMN-Referenzmodelle (International) ---
@@ -284,4 +285,69 @@ Statistiken der untersuchten Prozessaufteilungen.
 \end{subfigure}
 \caption{Datenmodell nach dem XES-Import: Es liegt ausschließlich die Aktivitätstabelle vor, eine Case-Tabelle fehlt.}
 \label{fig:anhang-datenmodell}
+\end{figure}
+
+\subsection{Gesamtansichten der erstellten Celonis-Views}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/var_explorer_int.png}
+	\caption{Celonis-View \textit{Variant Explorer Internationals}: Prozessgraph des Happy Paths (21\,\% Abdeckung) und Häufigkeitsverteilung der 756 Varianten (Ø 86\,d, Median 66\,d)}
+	\label{fig:anhang_var_explorer_int}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/var_explorer_dom.png}
+	\caption{Celonis-View \textit{Variant Explorer Domestics}: Prozessgraph des Happy Paths (44\,\% Abdeckung) und Variantenliste inkl.\ der 134 Entwürfe (\texttt{Declaration SAVED by EMPLOYEE})}
+	\label{fig:anhang_var_explorer_dom}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/tpt_analysis.png}
+	\caption{Celonis-View \textit{TPT Analysis}: Gegenüberstellung der Durchlaufzeitverteilungen im Domestic- und International-Log}
+	\label{fig:anhang_tpt_analysis}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/rejections_int.png}
+	\caption{Celonis-View \textit{Rejections Internationals}: Übersicht der 1.755 abgelehnten Fälle (27\,\%) nach Rollen sowie Aufteilung in Declaration- und Permit-Ablehnungen}
+	\label{fig:anhang_rejections_int}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/rejections_dom.png}
+	\caption{Celonis-View \textit{Rejections Domestics}: Übersicht der 1.301 abgelehnten Fälle (12\,\%) mit Korrekturschleife über \texttt{Declaration REJECTED by EMPLOYEE} und Einzelfalltabelle}
+	\label{fig:anhang_rejections_dom}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/explore_dom_vs_int.png}
+	\caption{Celonis-View \textit{Explore Dom vs Int}: Direkter Struktur- und Mengenvergleich beider Event-Logs (10.500 vs.\ 6.449 Cases; 56.437 vs.\ 72.151 Events)}
+	\label{fig:anhang_explore_dom_vs_int}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/case_explorer_int.png}
+	\caption{Celonis-View \textit{Case Explorer Internationals}: Einzelfallinspektion mit Aktivitäts-Zeitstrahl und monatlichem Event-Aufkommen (2017--2020)}
+	\label{fig:anhang_case_explorer_int}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/case_explorer_dom.png}
+	\caption{Celonis-View \textit{Case Explorer Domestics}: Einzelfallinspektion und monatlicher Verlauf mit deutlichem Volumensprung ab Januar 2018}
+	\label{fig:anhang_case_explorer_dom}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/celonis/by_year.png}
+	\caption{Celonis-View \textit{By Year}: Vergleich der gestarteten Cases (oben) und aktiven Cases pro Jahr (unten) zwischen Domestic und International}
+	\label{fig:anhang_by_year}
 \end{figure}
