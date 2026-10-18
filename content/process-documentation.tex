@@ -23,45 +23,25 @@
 \hline
 \endhead
 \hline
-„Wir können die Rohdaten als CSV oder als Feather beziehen. Welches Format ist für die Weiterverarbeitung am schnellsten und effizientesten?“ (28.08.2026) &
-Festlegung des Datenformats zu Projektbeginn &
-Empfohlen wurde, die Feather-Dateien unverändert als Quelle zu behalten und alle abgeleiteten Tabellen als Parquet abzulegen; die Begründung (spaltenweise Speicherung, Kompression, erhaltene Datentypen) war nachvollziehbar und deckte sich mit der Dokumentation der Formate. Die Entscheidung haben wir anschließend im Team getroffen. &
-Claude (Anthropic), Opus 4.8 (Web) \\
+„Warum werden beim direkten XES-Import von \texttt{DomesticDeclarations.xes} und \texttt{InternationalDeclarations.xes} in Celonis keine Case-Attribute wie \texttt{Amount} oder \texttt{Permit ID} als eigene Case-Tabelle angelegt, und wie lässt sich das in Celonis prüfen?“ (16.10.2026) &
+Klärung technischer Fragen zu Celonis und zu den Einschränkungen des nativen XES-Imports (Kapitel 4.3) &
+Die Erklärung, dass der Standard-XES-Import in Celonis nur die Event-Ebene in eine Aktivitätstabelle übernimmt und Trace-Attribute abflacht, war zutreffend. Ich habe dies im Celonis-Datenmodell überprüft und anhand der offiziellen Celonis-Dokumentation sowie des Community-Eintrags (Buijs, 2019) verifiziert. &
+Google Gemini / Antigravity \\
 \hline
-„Erstelle ein Notebook \texttt{00\_data\_loading.ipynb}, das die Feather-Quelldateien einliest, die Typen vereinheitlicht und die Tabellen als Parquet nach \texttt{data/raw/} schreibt.“ (29.08.2026) &
-Umsetzung des Einlesens der Rohdaten &
-Das Notebook war als Gerüst brauchbar und lief nach Anpassungen durch. Ich habe es selbst ausgeführt und die Ergebnisse gegen die Quelldateien geprüft (Zeilen- und Spaltenzahl je Tabelle, Datentypen, Umwandlung der Datumsspalten). &
-Claude (Anthropic), Opus 4.8 (Web) \\
+„Erstelle PQL-Formeln in Celonis für die Durchlaufzeit zwischen \texttt{Declaration SUBMITTED by EMPLOYEE} und \texttt{Payment Handled}, für Mehrfacheinreichungen sowie Filter für abgelehnte Cases.“ (mehrfach, 15.--17.10.2026) &
+Teilweise Generierung und Fehlersuche bei PQL-Abfragen für eigene Analyse-Views (\textit{TPT Analysis}, \textit{Rejections Dashboard}) und KPIs (Kapitel 4 und 5.3) &
+Die vorgeschlagenen PQL-Ausdrücke (u.\,a.\ mit \texttt{CALC\_THROUGHPUT}, \texttt{FIRST\_OCCURRENCE} und \texttt{PU\_COUNT}) waren als Vorlage hilfreich, mussten jedoch teilweise an die exakten Spaltennamen im Celonis-Datenmodell angepasst werden. Alle Abfragen habe ich in Celonis selbst ausgeführt und die Ergebnisse an Einzelfällen geprüft. &
+Google Gemini / Antigravity \\
 \hline
-„Welche transformerbasierten Verfahren eignen sich für Themenmodellierung und Sentimentanalyse deutschsprachiger Parlamentsreden, und welche deutschen Modelle kommen dafür infrage?“ (03.09.2026) &
-Ideenfindung und Verfahrensauswahl für den Transformer-Strang (Kapitel 4.2 und 4.3) &
-Als Überblick brauchbar, in den Einzelheiten unspezifisch. Die Entscheidung für BERTopic mit \texttt{jina-embeddings-v2-base-de} und für \texttt{german-sentiment-bert} habe ich selbst getroffen und anhand der jeweiligen Originalarbeiten geprüft. Angaben zu Modelleigenschaften wurden nicht ungeprüft übernommen. &
-Claude (Anthropic), Opus 4.8 (Web) \\
+„Wie unterscheiden sich die ausgewiesenen Durchlaufzeiten in den Celonis-Standard-Views (\textit{Process Overview} vs.\ \textit{Throughput Times}) und wie verhält sich der Conformance-Checker beim Erweitern des Referenzmodells auf die Top-3-Varianten?“ (16.10.2026) &
+Rückfragen zur Funktionsweise von Celonis bei der Kennzahlenaggregation und beim Conformance Checking (Kapitel 4.1 und 4.5) &
+Die Hinweise zur internen Ausreißer-Filterung im \textit{Process Overview} und zur Generierung von XOR-Gateways im Conformance-Checker waren nachvollziehbar. Die fachliche Interpretation (insbesondere zum Rollout-Effekt 2018 und zur Rolle \texttt{REJECTED by EMPLOYEE}) habe ich selbst anhand der Dashboards und des \textit{Case Explorers} erarbeitet. &
+Google Gemini / Antigravity \\
 \hline
-„Wie berechne ich Embeddings für rund 300.000 Reden in Google Colab, ohne an Arbeits- und GPU-Speicher zu scheitern?“ (10.09.2026) &
-Anpassung des Rechenwegs an die begrenzten Ressourcen in Colab &
-Der Hinweis, die Berechnung in Blöcke zu zerlegen und Zwischenstände zu speichern, war der entscheidende Anstoß und wurde übernommen. Block- und Batchgröße habe ich selbst festgelegt. &
-Claude (Anthropic), Opus 4.8 (Web) \\
-\hline
-„Wie senke ich den Bedarf an GPU-Speicher bei der Satzklassifikation und beschleunige den Durchlauf?“ (13.09.2026) &
-Umsetzung des Sentiment-Laufs über 8,8 Mio. Sätze &
-Die Vorschläge (halbe Rechengenauigkeit, größere Batches, Verarbeitung in Abschnitten zu 200.000 Sätzen mit Zwischenspeicherung) waren umsetzbar. &
-Claude (Anthropic), Opus 4.8 (Web) \\
-\hline
-„Überarbeite diesen Notebook-Code und schlage Verbesserungen vor.“ (mehrfach, 10.--16.09.2026) &
-Refaktorierung und Fehlersuche im eigenen Code &
-Hilfreich bei Struktur und Wiederholungen im Code. Mehrere Vorschläge liefen nicht auf Anhieb und mussten korrigiert werden, insbesondere beim Zusammenführen von Embeddings und Reden über die \texttt{speech\_id}. Jede Änderung habe ich selbst ausgeführt und am Ergebnis geprüft. &
-Claude (Anthropic), Opus 4.8 (Web) \\
-\hline
-„Warum bricht \texttt{biber} ohne Fehlermeldung ab, und wie richte ich Unterschriften und Absatzabstände im Dokument aus?“ (17.09.2026) &
-Technische Fehlersuche und Formatierung in LaTeX &
-Die Ursachen wurden zutreffend benannt und behoben (beschädigter \texttt{biber}-Zwischenspeicher, Ausrichtung der Bilder auf der Grundlinie, Abstand der \texttt{\textbackslash paragraph}-Überschriften). Rein technisch, ohne Einfluss auf den Inhalt der Arbeit. &
-Claude Code (Anthropic), Opus 5 \\
-\hline
-„Schneide meine Quellen-PDFs auf die zitierten und markierten Seiten zu und prüfe, ob alle von mir zitierten Seiten enthalten sind.“ (17.09.2026) &
-Erstellung der geforderten Quellennachweise &
-Zuschnitt und Abgleich mit meinen Zitatstellen waren korrekt; dabei fiel eine falsche Seitenangabe zu Dieng et al. (2020) auf, die ich in der Quelle nachgeprüft und korrigiert habe. Die Markierungen in den PDFs stammen von mir. &
-Claude Code (Anthropic), Opus 5 \\
+„Formuliere aus meinen Celonis-Kennzahlen, Screenshots und Stichpunkten zu Durchlaufzeiten, Bottlenecks, Ablehnungen, Conformance und KPIs einen wissenschaftlich strukturierten LaTeX-Text für Kapitel 1, 4 und 5.3.“ (mehrfach, 16.--18.10.2026) &
+Textgenerierung und sprachliche Ausformulierung in LaTeX auf Basis eigener Analyseergebnisse und Notizen &
+Die generierten Textabschnitte setzten meine vorgegebenen Kennzahlen, Beobachtungen und Gliederungspunkte sprachlich sauber in LaTeX um. Sämtliche Zahlenwerte, Aussagen, Tabellen und Literaturverweise wurden von mir kritisch gegengelesen, teilweise umformuliert und mit meinen Celonis-Auswertungen abgeglichen. &
+Google Antigravity / Gemini \\
 \hline
 \end{longtable}
 
