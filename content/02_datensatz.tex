@@ -5,12 +5,15 @@
 Gegeben sind zwei XES-Dateien: InternationDeclarations.xes und DomesticDeclarations.xes, die je ein mit OpenXES generiertes konformes Log mit mehreren Traces und darunter Events enthalten.
 Der Log-Untersuchungszeitraum liegt zwischen dem 04.10.2016 und dem 09.05.2020, wobei Randevents (Reisezeitpunkte) die Range vergrößerten.
 InternationalDeclarations.xes enthält 6.449 Traces mit insgesamt 72.151 Events, während DomesticDeclarations.xes 10.500 Traces mit insgesamt 56.437 Events enthält.
-\begin{table}[htbp]
-    \centering
-    \setstretch{1}
-    \renewcommand{\arraystretch}{1.1}
-    \setlength{\tabcolsep}{3pt}
-    \footnotesize
+\begin{table}[!htbp]
+    \vspace{-0.3cm}
+    \noindent
+    \begin{minipage}[c]{0.80\textwidth}
+        \centering
+        \setstretch{1}
+        \renewcommand{\arraystretch}{1.1}
+        \setlength{\tabcolsep}{3pt}
+        \scriptsize
     \begin{adjustbox}{max width=\textwidth}
         \begin{tabular}{|c|l|r|*{5}{r}|r|*{5}{r}|}
             \hline
@@ -45,45 +48,45 @@ InternationalDeclarations.xes enthält 6.449 Traces mit insgesamt 72.151 Events,
             \hline
         \end{tabular}%
     \end{adjustbox}
-    \caption{Basisstatistik der Event-Logs}
-    \label{tab:basisstatistik}
+    \end{minipage}\hfill%
+    \begin{minipage}[c]{0.18\textwidth}
+        \captionof{table}{Basisstatistik der Event-Logs}
+        \label{tab:basisstatistik}
+    \end{minipage}
     \vspace{-0.8cm}
 \end{table}
 
 \subsection{Trace-Attribute}
 Die Traces in beiden Dateien enthalten Metadaten wie die 'id', 'concept:name', 'BudgetNumber', 'DeclarationNumber' und 'Amount'.
 International enthält zusätzlich noch weitere Felder zu Permit, Travel oder Beträgen (Amounts).
-Auffällig ist, dass grundsätzlich alle Felder an jedem Trace der jeweiligen Datei Werte beinhalten, jedoch auch der Wert 'UNKNOWN' verwendet wird.
+Auffällig ist, dass grundsätzlich alle Felder an jedem Trace der jeweiligen Datei Werte beinhalten, jedoch auch der Wert 'UNKNOWN' verwendet wird. \par
 \begin{figure}[h]
     \centering
-    \vspace{-0.25cm}
     \includegraphics[width=1\textwidth]{figures/python/attribute}
-    \vspace{-0.75cm}
     \caption{Attribut und deren Verteilung je Log}
 \end{figure}
-\begin{wrapfigure}{l}{0.36\textwidth}
-    \vspace{-1.2cm}
-    \includegraphics[trim={0 0 5cm 3.5cm},clip,width=0.35\textwidth]{figures/python/permitid}
-    \vspace{-0.5cm}
+\begin{wrapfigure}{l}{0.38\textwidth}
+    \includegraphics[trim={0 0 5cm 3.5cm},clip,width=0.37\textwidth]{figures/python/permitid}
     \caption{Überblick Abweichungen Permit ID und Permit id}
+    \vspace{-0.5cm}
     \label{fig:permitid}
 \end{wrapfigure}
 Zudem gibt es in der Vielzahl der Eigenattribute von International semantische Ähnlichkeiten, die untersucht wurden.
 'Permit ID' und 'Permit id' unterscheiden sich nur in der Groß-/Kleinschreibung.
 Bei der Betrachtung der enthaltenen Werte, zeigt sich, dass überwiegend diese übereinstimmen, allerdings 448 Fälle existieren, in denen 'Permit id' abweichend von 'Permit ID' den Wert 'travel permit 423' enthält.
 Der Wert 'travel permit 423' ist dabei nicht nur für den Fall relevant, sondern wird auch für einen Trace mit 'Permit ID' = 'travel permit 423' verwendet, wo damit eine Übereinstimmung vorliegt.
-Auf eine mögliche Erklärung dieser 448/449 Fälle wird in Kapitel \todo{Kapitellink} eingegangen.
+Auf eine mögliche Erklärung dieser 448/449 Fälle wird in Kapitel \todo{Kapitellink} eingegangen. \par
 Auch die Amount-Felder 'Amount' / 'RequestedAmount' / 'AdjustedAmount' / 'OriginalAmount' wurden zusammen untersucht und zusätzlich mit 'Permit RequestedBudget' gegenübergestellt.
-Es konnte festgestellt werden dass in 6448 von 6449 Fällen die ersteren 4 Felder den gleichen Wert enthalten bei 6001 verschiedenen Wertkombinationen, während zu RequestedBudget nur 24 Traces eine Gleichheit gefunden werden konnte, davon 21 Fälle mit dem Amount 0.
+Es konnte festgestellt werden dass in 6448 von 6449 Fällen die ersteren 4 Felder den gleichen Wert enthalten bei 6001 verschiedenen Wertkombinationen, während zu RequestedBudget nur 24 Traces eine Gleichheit gefunden werden konnte, davon 21 Fälle mit dem Amount 0.\par
 'case:Permit travel permit number' und 'case:travel permit number' sind in 5970 Fällen identisch und weichen in 479 Fällen voneinander ab.
 'case:id' und 'case:concept:name' sind in beiden Logs je Trace immer identisch und eindeutig.
 \begin{table}[htbp]
     \centering
     \caption{Attribute und Anzahl distinkter Werte je Log}
     \label{tab:attribut-maechtigkeiten}
-    \footnotesize
+    \scriptsize
     \setstretch{1}
-    \renewcommand{\arraystretch}{1.15}
+    \renewcommand{\arraystretch}{1}
     \begin{tabularx}{\textwidth}{@{}p{2cm}XX@{}}
         \toprule
         & \textbf{Domestic (10.500 Traces)} & \textbf{International (6.449 Traces)} \\
@@ -130,17 +133,19 @@ Es konnte festgestellt werden dass in 6448 von 6449 Fällen die ersteren 4 Felde
 \end{table}
 
 \subsection{Event-Daten}
+\begin{wrapfigure}{r}{0.55\linewidth}
+    \centering
+    \vspace{-0.3cm}
+    \includegraphics[width=0.55\textwidth]{figures/python/eventtypes}
+    \caption{Eventverteilung je Log}
+    \vspace{-2cm}
+    \label{fig:eventtypes}
+\end{wrapfigure}
 In beiden Logs enthält ein Event die gleichen 5 Attribute: 'id', 'org:resource', 'concept:name', 'time:timestamp' und 'org:role'.
 'id' und 'time:timestamp' sind Metadaten zu dem betroffenen Event.
 'concept:name' beschreibt die durchgeführte Aktivität.
 'org:resource' erklärt den Ursprung des Events, ob SYSTEM oder STAFF MEMBER, während 'org:role' die Rolle des Event-Akteurs wiedergibt.
 Jedem möglichen Wert von 'concept:name' ist eine eindeutige Kombination aus 'org:resource' und 'org:role' zugeordnet.
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\linewidth]{figures/python/eventtypes}
-    \caption{}
-    \label{fig:eventtypes}
-\end{figure}
 Bei Domestic sind alle im Log enthaltenen Events in ihrer id eindeutig, während bei International einzelne Events (Kennung über id und time:timestamp) mehrfach vorkommen.
 Dies betrifft 1480 Event-Ids mit insgesamt 4558 Nennungen.
 Eine Abweichung des Timestamps oder des concept:name innerhalb der gleichen Event-Id gibt es bei allen Nennungen in dem Log nicht, weswegen von dem selben Event ausgegangen werden kann.
