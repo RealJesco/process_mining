@@ -155,6 +155,49 @@ def unique_analysis(log, cols):
     display(traces[~equal].reset_index(drop=True))
     return traces[~equal].reset_index(drop=True)["case:id"].tolist()
 
+def basic_statistics(logs, years=range(2016, 2021), case_id="case:concept:name"):
+    """Basisstatistik ungekürzter Logs; Case-Start = frühester Zeitstempel (UTC).
+
+    Varianten sind exakte Aktivitätsfolgen inklusive Wiederholungen. Bei
+    Zeitgleichheit bleibt die Eingabereihenfolge erhalten. Events werden nicht
+    dedupliziert. Events je Jahr zählen die Event-Zeitstempel (UTC), unabhängig
+    vom Case-Start. Angeforderte und tatsächlich vorkommende Jahre erscheinen
+    auch dann, wenn ein einzelnes Log in einem Jahr keine Einträge enthält.
+    """
+    if not logs:
+        raise ValueError("At least one event log is required.")
+    start_counts = {}
+    event_counts = {}
+    statistics = {}
+    all_years = set(years)
+    for name, log in logs.items():
+        events = _analysis_events(log, case_id)
+        if "org:resource" not in events.columns:
+            raise KeyError(f"Missing 'org:resource' column in log '{name}'.")
+        if events["org:resource"].isna().any():
+            raise ValueError(f"Resources must not be missing in log '{name}'.")
+        cases = events.groupby(case_id, sort=False)
+        starts = cases["time:timestamp"].min().dt.year.value_counts()
+        start_counts[name] = starts
+        event_counts[name] = events["time:timestamp"].dt.year.value_counts()
+        all_years.update(event_counts[name].index)
+        statistics[name] = {
+            "Cases": len(cases),
+            "Events": len(events),
+            "Aktivitäten": events["concept:name"].nunique(),
+            "Varianten (Python)": cases["concept:name"].agg(tuple).nunique(),
+            "Ressourcen (org:resource)": ", ".join(sorted(events["org:resource"].unique())),
+        }
+    for name, values in statistics.items():
+        resources = values.pop("Ressourcen (org:resource)")
+        for year in sorted(all_years):
+            values[f"Case-Start {year}"] = int(start_counts[name].get(year, 0))
+        for year in sorted(all_years):
+            values[f"Events {year}"] = int(event_counts[name].get(year, 0))
+        values["Ressourcen (org:resource)"] = resources
+    return pd.DataFrame(statistics).rename_axis("Kennzahl")
+
+
 def field_summary(logs):
     """Je Log: welche Felder sind Event- und welche Trace-Attribute (Präfix `case:`)."""
     rows = []
